@@ -22,6 +22,12 @@ npm run build
 出力先は `dist` です（静的出力）。
 
 ## Netlifyデプロイ
+
+## テスト公開向けの安全設定（おすすめ）
+- デフォルトで `PUBLIC_SITE_NOINDEX=true` とし、検索エンジンにインデックスされない設定
+- `netlify.toml` で全体は noindex、`production` コンテキストのみ `false` に上書き
+- まだ公開しないテストサイト運用に向いた初期値です
+
 - Build command: `npm run build`
 - Publish directory: `dist`
 - GitHub連携で push 時に自動デプロイ

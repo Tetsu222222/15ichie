@@ -1,3 +1,9 @@
 [build]
   command = "npm run build"
   publish = "dist"
+
+[build.environment]
+  PUBLIC_SITE_NOINDEX = "true"
+
+[context.production.environment]
+  PUBLIC_SITE_NOINDEX = "false"

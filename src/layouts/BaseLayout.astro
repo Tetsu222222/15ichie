@@ -11,6 +11,7 @@ interface Props {
 
 const { title, description, ogImage = '/ogp-default.jpg' } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const noindex = import.meta.env.PUBLIC_SITE_NOINDEX === 'true';
 ---
 
 <!doctype html>
@@ -27,6 +28,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={new URL(ogImage, Astro.site).toString()} />
     <meta name="twitter:card" content="summary_large_image" />
+    {noindex && <meta name="robots" content="noindex,nofollow,noarchive" />}
   </head>
   <body>
     <Header />
