@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import { getNewsList } from '../../lib/microcms';
+
+const newsList = await getNewsList();
+---
+<BaseLayout title="新着情報 | 15 Ichie Strawberry Farm" description="15 Ichie Strawberry Farmの新着情報一覧ページです。">
+  <section class="container page-header"><h1>新着情報</h1></section>
+  <section class="container">
+    {newsList.length === 0 ? <p>現在、新着情報はありません。</p> : <div class="news-grid">{newsList.map((n) => <NewsCard news={n} />)}</div>}
+  </section>
+</BaseLayout>

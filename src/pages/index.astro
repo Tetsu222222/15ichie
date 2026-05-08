@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NewsCard from '../components/NewsCard.astro';
+import { getNewsList } from '../lib/microcms';
+
+const newsList = await getNewsList().catch((e) => {
+  console.error(e);
+  return [];
+});
+const latestNews = newsList.slice(0, 3);
+---
+<BaseLayout title="15 Ichie Strawberry Farm | いちごと季節を楽しむ農園" description="15 Ichie Strawberry Farmの公式サイト。農園紹介・商品情報・アクセス・新着情報を掲載しています。">
+  <section class="hero container">
+    <h1>いちごと季節を、ていねいに。</h1>
+    <p>清潔で安心できる環境で、みずみずしいいちごをお届けします。</p>
+    <div class="cta-row">
+      <a class="btn" href="/products/">商品情報を見る</a>
+      <a class="btn ghost" href="/access/">アクセスを見る</a>
+      <a class="btn ghost" href="/news/">新着情報を見る</a>
+    </div>
+  </section>
+  <section class="container grid-2">
+    <article class="card"><h2>農園紹介</h2><p>自然と向き合いながら、毎日おいしいいちごづくりに取り組んでいます。</p></article>
+    <article class="card"><h2>いちごへのこだわり</h2><p>土づくり、水、温度管理にこだわり、安心して食べられる品質を大切にしています。</p></article>
+  </section>
+  <section class="container">
+    <h2>新着情報</h2>
+    {latestNews.length === 0 ? <p>現在、新着情報はありません。</p> : <div class="news-grid">{latestNews.map((n) => <NewsCard news={n} />)}</div>}
+  </section>
+</BaseLayout>
