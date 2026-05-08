@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NewsCard from '../components/NewsCard.astro';
+import { getNewsList } from '../lib/microcms';
+
+const newsList = await getNewsList().catch((e) => {
+  console.error(e);
+  return [];
+});
+const latestNews = newsList.slice(0, 3);
+---
+<BaseLayout title="15 Ichie Strawberry Farm | いちごと季節を楽しむ農園" description="15 Ichie Strawberry Farmの公式サイト。農園紹介・商品情報・アクセス・新着情報を掲載しています。">
+  <section class="hero-wrap">
+    <div class="container hero">
+      <p class="eyebrow">15 Ichie Strawberry Farm</p>
+      <h1>いちごと季節を、
+        <span>ていねいに。</span>
+      </h1>
+      <p class="lead">清潔で安心できる環境で、みずみずしいいちごをお届けします。農園のこと、こだわり、商品情報をゆっくりご覧ください。</p>
+      <div class="cta-row">
+        <a class="btn" href="/products/">商品情報を見る</a>
+        <a class="btn sub" href="/access/">アクセスを見る</a>
+        <a class="btn ghost" href="/news/">新着情報を見る</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="section-heading">
+      <h2>農園について</h2>
+      <p>地域の自然を活かし、毎日ていねいに育てています。</p>
+    </div>
+    <div class="grid-2">
+      <article class="card card-feature">
+        <h3>農園紹介</h3>
+        <p>自然と向き合いながら、毎日おいしいいちごづくりに取り組んでいます。ご家族でも安心して楽しめる農園づくりを続けています。</p>
+      </article>
+      <article class="card card-feature">
+        <h3>いちごへのこだわり</h3>
+        <p>土づくり、水、温度管理にこだわり、安心して食べられる品質を大切にしています。収穫タイミングにも妥協しません。</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="container section">
+    <div class="section-heading with-link">
+      <div>
+        <h2>新着情報</h2>
+        <p>営業日や販売情報、季節のお知らせを掲載しています。</p>
+      </div>
+      <a href="/news/" class="text-link">一覧を見る →</a>
+    </div>
+    {latestNews.length === 0 ? <p class="empty">現在、新着情報はありません。</p> : <div class="news-grid">{latestNews.map((n) => <NewsCard news={n} />)}</div>}
+  </section>
+</BaseLayout>
