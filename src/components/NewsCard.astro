@@ -1,0 +1,12 @@
+---
+import type { NewsItem } from '../lib/microcms';
+const { news } = Astro.props as { news: NewsItem };
+---
+<article class="card news-card">
+  {news.eyecatch?.url && <img src={news.eyecatch.url} alt={`${news.title}のアイキャッチ画像`} loading="lazy" />}
+  <div class="card-body">
+    <p class="date">{news.publishedAt ? new Date(news.publishedAt).toLocaleDateString('ja-JP') : '日付未設定'}</p>
+    <h3><a href={`/news/${news.slug}/`}>{news.title}</a></h3>
+    {news.description && <p>{news.description}</p>}
+  </div>
+</article>

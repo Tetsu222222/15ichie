@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getNewsList, getNewsBySlug } from '../../lib/microcms';
+
+export async function getStaticPaths() {
+  const list = await getNewsList();
+  return list.map((item) => ({ params: { slug: item.slug } }));
+}
+
+const { slug } = Astro.params;
+const article = slug ? await getNewsBySlug(slug) : null;
+if (!article) {
+  throw new Error('該当する記事が見つかりませんでした。slugまたは公開設定を確認してください。');
+}
+
+const title = `${article.title} | 新着情報 | 15 Ichie Strawberry Farm`;
+const description = article.description ?? '15 Ichie Strawberry Farmからのお知らせです。';
+const ogImage = article.eyecatch?.url;
+---
+<BaseLayout title={title} description={description} ogImage={ogImage}>
+  <article class="container news-detail">
+    <p class="date">{article.publishedAt ? new Date(article.publishedAt).toLocaleDateString('ja-JP') : ''}</p>
+    <h1>{article.title}</h1>
+    {article.eyecatch?.url && <img src={article.eyecatch.url} alt={`${article.title}の画像`} />}
+    <div set:html={article.body ?? '<p>本文は準備中です。</p>'} />
+  </article>
+</BaseLayout>

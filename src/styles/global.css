@@ -1,0 +1,36 @@
+:root {
+  --red: #d93654;
+  --pink: #fdecef;
+  --green: #5d8a4f;
+  --text: #333;
+  --bg: #fff;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: "Hiragino Kaku Gothic ProN", sans-serif; color: var(--text); background: var(--bg); line-height: 1.8; }
+a { color: var(--red); text-decoration: none; }
+img { max-width: 100%; border-radius: 16px; }
+.container { width: min(1080px, 92%); margin: 0 auto; }
+.site-header { border-bottom: 1px solid #eee; background: #fff; position: sticky; top: 0; }
+.header-inner { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; }
+.brand { font-weight: bold; color: var(--green); }
+.nav-list { display: flex; gap: 1rem; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
+.hero { padding: 5rem 0 3rem; }
+.hero h1 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: .5rem; }
+.cta-row { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 1rem; }
+.btn { background: var(--red); color: #fff; padding: .7rem 1rem; border-radius: 999px; }
+.btn.ghost { background: var(--pink); color: var(--red); }
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 2rem auto; }
+.card { background: #fff; border: 1px solid #f0f0f0; border-radius: 18px; padding: 1.2rem; box-shadow: 0 6px 20px rgba(0,0,0,.03); }
+.news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.news-card { padding: 0; overflow: hidden; }
+.news-card .card-body { padding: 1rem; }
+.page-header { padding-top: 3rem; }
+.site-footer { margin-top: 4rem; background: #f8f8f8; padding: 2rem 0; font-size: .95rem; }
+.date { color: #777; font-size: .9rem; }
+@media (max-width: 900px) {
+  .news-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 680px) {
+  .header-inner { flex-direction: column; align-items: flex-start; gap: .6rem; }
+  .grid-2, .news-grid { grid-template-columns: 1fr; }
+}
