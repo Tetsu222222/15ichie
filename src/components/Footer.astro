@@ -1,8 +1,90 @@
-<footer class="site-footer">
-  <div class="container">
-    <p><strong>15 Ichie Strawberry Farm</strong></p>
-    <p>〒000-0000 〇〇県〇〇市〇〇町1-2-3 / 営業時間 10:00-16:00（季節営業・不定休）</p>
-    <p>ご注文・お問い合わせはお電話（000-0000-0000）または各種SNSのDMをご利用ください。</p>
-    <small>© {new Date().getFullYear()} 15 Ichie Strawberry Farm</small>
+---
+import Logo from './Logo.astro';
+import { NAV, SITE } from '../site';
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <a href="/" class="footer__logo">
+        <Logo size={44} />
+        <span><small>石黒いちご農園</small>いちごいちえ</span>
+      </a>
+      <p>
+        {SITE.address}<br />
+        電話 <a href={`tel:${SITE.tel.replaceAll('-', '')}`}>{SITE.tel}</a>　FAX {SITE.fax}<br />
+        営業 {SITE.hours}（{SITE.closed}定休）
+      </p>
+    </div>
+    <nav aria-label="フッターメニュー">
+      <ul>
+        <li><a href="/">トップ</a></li>
+        {NAV.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+      </ul>
+    </nav>
+  </div>
+  <div class="container footer__copy">
+    <span>© {year} {SITE.name}</span>
+    <span>掲載写真はイメージです</span>
   </div>
 </footer>
+
+<style>
+  .footer {
+    background: var(--leaf-900);
+    color: rgb(255 255 255 / 0.78);
+    padding-top: 64px;
+    font-size: 0.9rem;
+  }
+  .footer a {
+    color: #fff;
+    text-decoration: none;
+  }
+  .footer a:hover {
+    color: var(--berry-200);
+  }
+  .footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 40px;
+    padding-bottom: 48px;
+  }
+  .footer__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.35rem;
+    letter-spacing: 0.12em;
+    margin-bottom: 16px;
+  }
+  .footer__logo small {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    opacity: 0.75;
+    line-height: 1.4;
+  }
+  .footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(130px, auto));
+    gap: 8px 40px;
+  }
+  .footer__copy {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+    border-top: 1px solid rgb(255 255 255 / 0.12);
+    padding-block: 20px 28px;
+    font-size: 0.78rem;
+    color: rgb(255 255 255 / 0.55);
+  }
+</style>

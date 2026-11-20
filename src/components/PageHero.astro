@@ -1,0 +1,20 @@
+---
+import { Image } from 'astro:assets';
+interface Props {
+  title: string;
+  eyebrow: string;
+  image: ImageMetadata;
+  position?: string;
+}
+const { title, eyebrow, image, position = 'center' } = Astro.props;
+---
+
+<section class="page-hero">
+  <div class="page-hero__bg">
+    <Image src={image} alt="" widths={[800, 1280, 1920]} sizes="100vw" loading="eager" style={`object-position:${position}`} />
+  </div>
+  <div class="container page-hero__inner">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1>{title}</h1>
+  </div>
+</section>

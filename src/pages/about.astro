@@ -1,7 +1,233 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ShopInfo from '../components/ShopInfo.astro';
+import { SITE } from '../site';
+import greenhouse from '../assets/photos/greenhouse.jpg';
+import exterior from '../assets/photos/exterior.jpg';
+import flower from '../assets/photos/flower.jpg';
+import hero from '../assets/photos/hero.jpg';
+import coolGrow from '../assets/photos/cool-grow.jpg';
+import basket from '../assets/photos/basket.jpg';
+
+const gallery = [
+  { img: greenhouse, cap: 'ハウス内の様子' },
+  { img: hero, cap: '苺' },
+  { img: flower, cap: '苺の花' },
+  { img: exterior, cap: 'ハウス周辺' },
+];
 ---
-<BaseLayout title="農園紹介 | 15 Ichie Strawberry Farm" description="15 Ichie Strawberry Farmの農園紹介。栽培方針や農園の想いをご紹介します。">
-  <section class="container page-header"><h1>農園紹介</h1></section>
-  <section class="container card"><p>15 Ichie Strawberry Farmは、地域に根ざし、季節のおいしさを大切にするいちご農園です。衛生管理と丁寧な栽培を徹底し、安心して楽しめるいちごを育てています。</p></section>
-</BaseLayout>
+
+<Base title="農園紹介" description="2010年開園。栃木県宇都宮市で「とちおとめ」を育てる石黒いちご農園いちごいちえの紹介です。">
+  <PageHero title="農園紹介" eyebrow="About us" image={greenhouse} />
+
+  <section class="section">
+    <div class="container about">
+      <div class="about__text reveal">
+        <p class="eyebrow">Our Goal</p>
+        <h2>おいしくて健康なイチゴで、<br />社会に貢献したい。</h2>
+        <p>
+          2010年に、たくさんの方に助けていただきながら開園することができました。
+          感謝の気持ちを忘れずに、おいしくて健康なイチゴを通じて社会貢献ができるよう、がんばります。
+        </p>
+        <p>私たちが心を込めて、おいしいイチゴを作っています。</p>
+        <p class="sign">園主　{SITE.owner}</p>
+      </div>
+      <div class="about__img reveal">
+        <Image src={basket} alt="" widths={[600, 900]} sizes="(max-width: 860px) 100vw, 45vw" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white">
+    <div class="container">
+      <div class="facts">
+        <article class="fact reveal">
+          <p class="fact__label">開園</p>
+          <p class="fact__value">{SITE.founded}<small>年</small></p>
+          <p>宇都宮市屋板町で開園しました。</p>
+        </article>
+        <article class="fact reveal">
+          <p class="fact__label">品種</p>
+          <p class="fact__value">{SITE.variety}</p>
+          <p>栃木の誇る「とちおとめ」の究極のおいしさを求めて栽培しています。</p>
+        </article>
+        <article class="fact reveal">
+          <p class="fact__label">営業時間</p>
+          <p class="fact__value">{SITE.hours}</p>
+          <p>お休みの日は毎月<a href="/news/">お知らせ</a>でご案内しています。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Gallery</p>
+        <h2>農園の様子</h2>
+      </div>
+      <div class="gallery">
+        {
+          gallery.map((g, i) => (
+            <figure class:list={['reveal', { wide: i === 0 }]}>
+              <Image src={g.img} alt={g.cap} widths={[500, 900, 1400]} sizes={i === 0 ? '(max-width: 760px) 100vw, 66vw' : '(max-width: 760px) 100vw, 33vw'} />
+              <figcaption>{g.cap}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+      <p class="note">※写真はイメージです。</p>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="cta__bg"><Image src={coolGrow} alt="" widths={[800, 1600]} sizes="100vw" /></div>
+    <div class="container cta__inner reveal">
+      <h2>おいしさのひみつを、<br class="sp" />もっと知る。</h2>
+      <a href="/taste/" class="btn btn--light">おいしさの秘密へ <span class="arrow">→</span></a>
+    </div>
+  </section>
+
+  <ShopInfo />
+</Base>
+
+<style>
+  .about {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(32px, 6vw, 88px);
+    align-items: center;
+  }
+  .about__img :global(img) {
+    border-radius: var(--radius);
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    width: 100%;
+  }
+  .sign {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-top: 1.6em;
+  }
+  @media (max-width: 860px) {
+    .about {
+      grid-template-columns: 1fr;
+    }
+  }
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .fact {
+    background: var(--cream);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    text-align: center;
+  }
+  .fact__label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--leaf-700);
+    margin-bottom: 4px;
+  }
+  .fact__value {
+    font-family: var(--font-serif);
+    font-size: clamp(1.7rem, 3vw, 2.2rem);
+    font-weight: 700;
+    color: var(--berry-600);
+    margin-bottom: 0.4em;
+  }
+  .fact__value small {
+    font-size: 0.5em;
+    margin-left: 2px;
+  }
+  .fact p:last-child {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin: 0;
+  }
+  @media (max-width: 760px) {
+    .facts {
+      grid-template-columns: 1fr;
+    }
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  .gallery figure {
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+  }
+  .gallery .wide {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  .gallery :global(img) {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .gallery figcaption {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    background: rgb(255 255 255 / 0.92);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 3px 12px;
+    border-radius: 999px;
+  }
+  @media (max-width: 760px) {
+    .gallery {
+      grid-template-columns: 1fr 1fr;
+    }
+    .gallery .wide {
+      grid-column: span 2;
+      grid-row: auto;
+    }
+  }
+  .cta {
+    position: relative;
+    isolation: isolate;
+    color: #fff;
+    padding-block: clamp(80px, 12vw, 140px);
+    text-align: center;
+    overflow: hidden;
+  }
+  .cta__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  .cta__bg :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgb(27 51 32 / 0.55);
+  }
+  .sp {
+    display: none;
+  }
+  @media (max-width: 640px) {
+    .sp {
+      display: inline;
+    }
+  }
+</style>

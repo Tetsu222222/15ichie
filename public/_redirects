@@ -1,0 +1,6 @@
+# 旧WordPressの固定URL → 新URL（?page_id= などのクエリ付きURLは worker/index.js で転送）
+/wp-admin / 301
+/wp-admin/* / 301
+/wp-login.php / 301
+/feed /news/ 301
+/feed/ /news/ 301

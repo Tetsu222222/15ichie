@@ -1,30 +1,613 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
 import NewsCard from '../components/NewsCard.astro';
-import { getNewsList } from '../lib/microcms';
+import ShopInfo from '../components/ShopInfo.astro';
+import { SITE, PRODUCTS } from '../site';
+import { getNews, yen } from '../lib';
+import hero from '../assets/photos/hero.jpg';
+import basket from '../assets/photos/basket.jpg';
+import drip from '../assets/photos/drip.jpg';
+import coolGrow from '../assets/photos/cool-grow.jpg';
+import harvest from '../assets/photos/harvest.jpg';
+import deluxe from '../assets/photos/deluxe.jpg';
+import gift30 from '../assets/photos/gift30.jpg';
+import grande from '../assets/photos/grande.jpg';
+import greenhouse from '../assets/photos/greenhouse.jpg';
 
-const newsList = await getNewsList().catch((e) => {
-  console.error(e);
-  return [];
-});
-const latestNews = newsList.slice(0, 3);
+const news = (await getNews()).slice(0, 3);
+const pick = (id: string) => PRODUCTS.find((p) => p.id === id)!;
+const featured = [
+  { p: pick('deluxe'), img: deluxe },
+  { p: pick('gift30'), img: gift30 },
+  { p: pick('grande'), img: grande },
+];
+const secrets = [
+  {
+    no: '01',
+    title: '海と山のアミノ酸',
+    text: 'アサリ・ハマグリ・カツオ・海藻、タケノコ・竹酢液を発酵させた抽出液で、旨みと丈夫な苗を育てます。',
+    img: drip,
+  },
+  {
+    no: '02',
+    title: '低温でじっくり',
+    text: 'あえて低めの温度で育て、時間をかけて実を熟させる。そのぶん栄養がゆっくり実に注がれます。',
+    img: coolGrow,
+  },
+  {
+    no: '03',
+    title: '完熟・朝摘み',
+    text: '完熟した苺を朝の寒い時間に収穫し、その日のうちに出荷。いちばんおいしい瞬間をお届けします。',
+    img: harvest,
+  },
+];
 ---
-<BaseLayout title="15 Ichie Strawberry Farm | いちごと季節を楽しむ農園" description="15 Ichie Strawberry Farmの公式サイト。農園紹介・商品情報・アクセス・新着情報を掲載しています。">
-  <section class="hero container">
-    <h1>いちごと季節を、ていねいに。</h1>
-    <p>清潔で安心できる環境で、みずみずしいいちごをお届けします。</p>
-    <div class="cta-row">
-      <a class="btn" href="/products/">商品情報を見る</a>
-      <a class="btn ghost" href="/access/">アクセスを見る</a>
-      <a class="btn ghost" href="/news/">新着情報を見る</a>
+
+<Base transparentHeader>
+  <!-- ヒーロー -->
+  <section class="hero">
+    <div class="hero__bg">
+      <Image src={hero} alt="ハウスで実った完熟のとちおとめ" widths={[800, 1280, 1920]} sizes="100vw" loading="eager" fetchpriority="high" />
+    </div>
+    <div class="container hero__inner">
+      <p class="hero__place">栃木県宇都宮市 ・ 石黒いちご農園</p>
+      <h1 class="hero__title">
+        <span>朝摘み、完熟。</span>
+        <span>一期一会の、とちおとめ。</span>
+      </h1>
+      <p class="hero__lead">{SITE.catch}<br />海と山の恵みで、ひと粒ずつ丁寧に育てています。</p>
+      <div class="hero__actions">
+        <a href="/products/" class="btn btn--primary">商品と価格を見る <span class="arrow">→</span></a>
+        <a href="/order/" class="btn btn--light">ご注文・ご予約</a>
+      </div>
+    </div>
+    <div class="hero__scroll" aria-hidden="true">SCROLL</div>
+  </section>
+
+  <!-- 最新のお知らせ（帯） -->
+  {
+    news[0] && (
+      <div class="ticker">
+        <div class="container ticker__inner">
+          <span class="ticker__label">お知らせ</span>
+          <a href={`/news/${news[0].id}/`} class="ticker__link">
+            <time datetime={news[0].data.date.toISOString()}>
+              {news[0].data.date.getFullYear()}.{String(news[0].data.date.getMonth() + 1).padStart(2, '0')}.{String(news[0].data.date.getDate()).padStart(2, '0')}
+            </time>
+            <span>{news[0].data.title}</span>
+          </a>
+          <a href="/news/" class="ticker__more">一覧へ →</a>
+        </div>
+      </div>
+    )
+  }
+
+  <!-- コンセプト -->
+  <section class="section concept">
+    <div class="container concept__grid">
+      <div class="concept__text reveal">
+        <p class="eyebrow">Concept</p>
+        <h2>いちごとの出会いは、<br />一期一会。</h2>
+        <p>
+          2010年、たくさんの方に助けていただきながら開園した「いちごいちえ」。
+          栃木の誇る「とちおとめ」の究極のおいしさを求めて、私たちが心を込めて栽培しています。
+        </p>
+        <p>
+          感謝の気持ちを忘れずに、おいしくて健康なイチゴを通じて、社会に貢献できるように。
+          直売所での販売のほか、ご贈答用の全国発送も承っています。
+        </p>
+        <a href="/about/" class="btn btn--ghost">農園紹介 <span class="arrow">→</span></a>
+      </div>
+      <div class="concept__visual reveal">
+        <Image src={basket} alt="かごに盛った朝摘みのいちご" widths={[600, 900, 1200]} sizes="(max-width: 860px) 100vw, 50vw" />
+        <div class="concept__badge">
+          <span>Since</span>
+          <strong>2010</strong>
+        </div>
+      </div>
     </div>
   </section>
-  <section class="container grid-2">
-    <article class="card"><h2>農園紹介</h2><p>自然と向き合いながら、毎日おいしいいちごづくりに取り組んでいます。</p></article>
-    <article class="card"><h2>いちごへのこだわり</h2><p>土づくり、水、温度管理にこだわり、安心して食べられる品質を大切にしています。</p></article>
+
+  <!-- おいしさの秘密 -->
+  <section class="section section--white">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <p class="eyebrow">Our Secret</p>
+        <h2>おいしさの秘密</h2>
+        <p class="lead">「人間に良いものはイチゴにも良い」。<br />アミノ酸・酵素栽培で、甘みとフレッシュな食感を。</p>
+      </div>
+      <div class="secrets">
+        {
+          secrets.map((s) => (
+            <article class="secret reveal">
+              <div class="secret__img">
+                <Image src={s.img} alt="" widths={[500, 800]} sizes="(max-width: 860px) 100vw, 33vw" />
+              </div>
+              <p class="secret__no">{s.no}</p>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </article>
+          ))
+        }
+      </div>
+      <p class="center reveal">
+        <a href="/taste/" class="btn btn--ghost">くわしく見る <span class="arrow">→</span></a>
+      </p>
+    </div>
   </section>
-  <section class="container">
-    <h2>新着情報</h2>
-    {latestNews.length === 0 ? <p>現在、新着情報はありません。</p> : <div class="news-grid">{latestNews.map((n) => <NewsCard news={n} />)}</div>}
+
+  <!-- 商品 -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head products-head reveal">
+        <div>
+          <p class="eyebrow">Products</p>
+          <h2>商品のご案内</h2>
+        </div>
+        <p class="lead">ご家庭用から贈答用まで。<br />すべての商品に「お歳暮」「お年賀」ののしをお付けできます。</p>
+      </div>
+      <div class="grid grid--3">
+        {
+          featured.map(({ p, img }) => (
+            <a href={`/products/#${p.id}`} class="product card reveal">
+              <div class="product__img">
+                <Image src={img} alt={p.name} widths={[500, 800]} sizes="(max-width: 860px) 100vw, 33vw" />
+                <span class="product__tag">{p.tag}</span>
+              </div>
+              <div class="product__body">
+                <h3>{p.name}</h3>
+                <p class="product__price">
+                  {'unit' in p && <small>{p.unit}</small>}
+                  {yen(p.price)}
+                  <small>円（税込）</small>
+                </p>
+                <p class="product__lead">{p.lead}</p>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+      <p class="center reveal">
+        <a href="/products/" class="btn btn--primary">すべての商品・価格 <span class="arrow">→</span></a>
+      </p>
+    </div>
   </section>
-</BaseLayout>
+
+  <!-- 全国発送バナー -->
+  <section class="ship">
+    <div class="ship__bg">
+      <Image src={greenhouse} alt="" widths={[800, 1280, 1920]} sizes="100vw" />
+    </div>
+    <div class="container ship__inner reveal">
+      <p class="eyebrow">Delivery</p>
+      <h2>大切な方へ、<br class="sp" />朝摘みのおいしさを。</h2>
+      <p>直売所での宅配手配のほか、お電話・メール・フォームでのご注文で全国へお届けします。</p>
+      <a href="/order/" class="btn btn--light">ご注文方法を見る <span class="arrow">→</span></a>
+    </div>
+  </section>
+
+  <!-- お知らせ -->
+  <section class="section section--sand">
+    <div class="container">
+      <div class="section-head products-head reveal">
+        <div>
+          <p class="eyebrow">News</p>
+          <h2>お知らせ</h2>
+        </div>
+        <a href="/news/" class="btn btn--ghost">一覧を見る <span class="arrow">→</span></a>
+      </div>
+      <div class="grid grid--3">
+        {news.map((n) => <div class="reveal"><NewsCard entry={n} /></div>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- 店舗情報 -->
+  <ShopInfo />
+</Base>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    align-items: end;
+    color: #fff;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  .hero__bg :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 65% center;
+    animation: zoom 18s ease-out both;
+  }
+  @keyframes zoom {
+    from {
+      transform: scale(1.08);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(90deg, rgb(25 12 10 / 0.6) 0%, rgb(25 12 10 / 0.15) 60%, transparent),
+      linear-gradient(0deg, rgb(25 12 10 / 0.5) 0%, transparent 45%);
+  }
+  .hero__inner {
+    padding-block: 140px clamp(72px, 12vh, 120px);
+  }
+  .hero__place {
+    font-size: 0.82rem;
+    letter-spacing: 0.24em;
+    font-weight: 700;
+    opacity: 0.9;
+    margin-bottom: 18px;
+  }
+  .hero__title {
+    font-size: clamp(2.1rem, 6.4vw, 4.4rem);
+    line-height: 1.35;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5em;
+    text-shadow: 0 2px 30px rgb(0 0 0 / 0.25);
+  }
+  .hero__title span {
+    display: block;
+  }
+  .hero__lead {
+    font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+    max-width: 34em;
+    opacity: 0.95;
+    margin-bottom: 32px;
+  }
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .hero__scroll {
+    position: absolute;
+    right: var(--gutter);
+    bottom: 32px;
+    writing-mode: vertical-rl;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    opacity: 0.8;
+    padding-bottom: 64px;
+  }
+  .hero__scroll::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 1px;
+    height: 56px;
+    background: #fff;
+    animation: line 2.2s ease-in-out infinite;
+    transform-origin: top;
+  }
+  @keyframes line {
+    0% {
+      transform: scaleY(0);
+    }
+    50% {
+      transform: scaleY(1);
+      transform-origin: top;
+    }
+    51% {
+      transform-origin: bottom;
+    }
+    100% {
+      transform: scaleY(0);
+      transform-origin: bottom;
+    }
+  }
+  @media (max-width: 640px) {
+    .hero__scroll {
+      display: none;
+    }
+    .hero__actions .btn {
+      flex: 1 1 100%;
+    }
+  }
+
+  .ticker {
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+  }
+  .ticker__inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 64px;
+    font-size: 0.92rem;
+  }
+  .ticker__label {
+    flex-shrink: 0;
+    background: var(--berry-500);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.74rem;
+    padding: 4px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.1em;
+  }
+  .ticker__link {
+    display: flex;
+    gap: 14px;
+    min-width: 0;
+    color: var(--ink);
+    text-decoration: none;
+    flex: 1;
+  }
+  .ticker__link span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ticker__link time {
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .ticker__link:hover span {
+    color: var(--berry-600);
+  }
+  .ticker__more {
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    text-decoration: none;
+    font-weight: 700;
+  }
+  @media (max-width: 640px) {
+    .ticker__inner {
+      flex-wrap: wrap;
+      gap: 6px 12px;
+      padding-block: 14px;
+    }
+    .ticker__link {
+      flex-basis: 100%;
+      order: 3;
+      flex-direction: column;
+      gap: 0;
+    }
+    .ticker__link span {
+      white-space: normal;
+    }
+    .ticker__more {
+      margin-left: auto;
+    }
+  }
+
+  .concept__grid {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    gap: clamp(40px, 7vw, 96px);
+    align-items: center;
+  }
+  .concept__visual {
+    position: relative;
+  }
+  .concept__visual :global(img) {
+    border-radius: 200px 200px var(--radius) var(--radius);
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    width: 100%;
+  }
+  .concept__badge {
+    position: absolute;
+    left: -24px;
+    bottom: 40px;
+    width: 116px;
+    height: 116px;
+    border-radius: 50%;
+    background: var(--berry-500);
+    color: #fff;
+    display: grid;
+    place-content: center;
+    text-align: center;
+    line-height: 1.1;
+    box-shadow: var(--shadow);
+  }
+  .concept__badge span {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+  }
+  .concept__badge strong {
+    font-family: var(--font-serif);
+    font-size: 1.9rem;
+  }
+  @media (max-width: 860px) {
+    .concept__grid {
+      grid-template-columns: 1fr;
+    }
+    .concept__visual {
+      order: -1;
+      max-width: 460px;
+      margin-inline: auto;
+      width: 100%;
+    }
+    .concept__badge {
+      left: -8px;
+      width: 96px;
+      height: 96px;
+    }
+  }
+
+  .secrets {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(24px, 3vw, 40px);
+    margin-bottom: 48px;
+  }
+  .secret__img {
+    overflow: hidden;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+  }
+  .secret__img :global(img) {
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    width: 100%;
+    transition: transform 0.8s ease;
+  }
+  .secret:hover .secret__img :global(img) {
+    transform: scale(1.05);
+  }
+  .secret__no {
+    font-family: var(--font-serif);
+    color: var(--berry-500);
+    font-size: 1.6rem;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .secret p:last-child {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .secret:nth-child(2) {
+    transition-delay: 0.12s;
+  }
+  .secret:nth-child(3) {
+    transition-delay: 0.24s;
+  }
+  @media (max-width: 860px) {
+    .secrets {
+      grid-template-columns: 1fr;
+    }
+  }
+  .center {
+    text-align: center;
+    margin: 0;
+  }
+
+  .products-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 16px 40px;
+  }
+  .products-head h2 {
+    margin: 0;
+  }
+  .products-head .lead {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  .product {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .product:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow);
+    color: inherit;
+  }
+  .product__img {
+    position: relative;
+    overflow: hidden;
+  }
+  .product__img :global(img) {
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    width: 100%;
+  }
+  .product__tag {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: rgb(255 255 255 / 0.92);
+    color: var(--berry-700);
+    font-size: 0.74rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 999px;
+  }
+  .product__body {
+    padding: 22px 24px 26px;
+  }
+  .product__body h3 {
+    margin-bottom: 0.2em;
+  }
+  .product__price {
+    font-family: var(--font-serif);
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--berry-600);
+    margin-bottom: 0.4em;
+    line-height: 1.4;
+  }
+  .product__price small {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-weight: 500;
+    margin-inline: 2px 4px;
+  }
+  .product__lead {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.8;
+  }
+  .grid + .center {
+    margin-top: 48px;
+  }
+
+  .ship {
+    position: relative;
+    isolation: isolate;
+    color: #fff;
+    padding-block: clamp(96px, 14vw, 160px);
+    overflow: hidden;
+  }
+  .ship__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  .ship__bg :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ship::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, rgb(27 51 32 / 0.85), rgb(27 51 32 / 0.35));
+  }
+  .ship .eyebrow {
+    color: var(--berry-200);
+  }
+  .ship p:not(.eyebrow) {
+    max-width: 32em;
+    opacity: 0.92;
+    margin-bottom: 28px;
+  }
+  .sp {
+    display: none;
+  }
+  @media (max-width: 640px) {
+    .sp {
+      display: inline;
+    }
+  }
+</style>

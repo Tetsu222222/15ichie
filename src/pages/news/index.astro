@@ -1,13 +1,21 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
 import NewsCard from '../../components/NewsCard.astro';
-import { getNewsList } from '../../lib/microcms';
+import { getNews } from '../../lib';
+import flower from '../../assets/photos/flower.jpg';
 
-const newsList = await getNewsList();
+const news = await getNews();
 ---
-<BaseLayout title="新着情報 | 15 Ichie Strawberry Farm" description="15 Ichie Strawberry Farmの新着情報一覧ページです。">
-  <section class="container page-header"><h1>新着情報</h1></section>
-  <section class="container">
-    {newsList.length === 0 ? <p>現在、新着情報はありません。</p> : <div class="news-grid">{newsList.map((n) => <NewsCard news={n} />)}</div>}
+
+<Base title="お知らせ" description="営業日・販売価格・販売開始など、いちごいちえからのお知らせです。">
+  <PageHero title="お知らせ" eyebrow="News" image={flower} />
+  <section class="section">
+    <div class="container">
+      <div class="grid grid--3">
+        {news.map((n) => <div class="reveal"><NewsCard entry={n} /></div>)}
+      </div>
+      {news.length === 0 && <p>現在お知らせはありません。</p>}
+    </div>
   </section>
-</BaseLayout>
+</Base>

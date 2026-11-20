@@ -1,0 +1,345 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { SITE, PRODUCTS } from '../site';
+import { yen } from '../lib';
+import gift30 from '../assets/photos/gift30.jpg';
+
+const tel = SITE.tel.replaceAll('-', '');
+const f = SITE.orderForm;
+const useGoogleForm = Boolean(f.action);
+const n = (key: keyof typeof f.entries) => (useGoogleForm ? f.entries[key] : key);
+---
+
+<Base title="ご注文・ご予約" description="お電話・メール・ご来店・注文フォームでご注文を承ります。ギフトはご予約制です。全国発送可。">
+  <PageHero title="ご注文・ご予約" eyebrow="Order" image={gift30} />
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <p class="eyebrow">How to Order</p>
+        <h2>ご注文方法</h2>
+        <p class="lead">ご来店・お電話・メール・下記フォームで承ります。<br />季節や天候などによってお断りする場合がございますので、ご了承ください。</p>
+      </div>
+      <div class="ways">
+        <a href={`tel:${tel}`} class="way card reveal">
+          <span class="way__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
+          </span>
+          <h3>お電話</h3>
+          <p class="way__main">{SITE.tel}</p>
+          <p class="note">石黒携帯　FAX {SITE.fax}</p>
+        </a>
+        <a href={`mailto:${SITE.email}`} class="way card reveal">
+          <span class="way__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+          </span>
+          <h3>メール</h3>
+          <p class="way__main way__main--sm">{SITE.email}</p>
+          <p class="note">ご注文内容・お届け先をお書きください</p>
+        </a>
+        <a href="/access/" class="way card reveal">
+          <span class="way__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </span>
+          <h3>ご来店</h3>
+          <p class="way__main way__main--sm">{SITE.hours}</p>
+          <p class="note">{SITE.closed}定休・宅配も承ります</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white" id="form">
+    <div class="container container--narrow">
+      <div class="section-head reveal">
+        <p class="eyebrow">Order Form</p>
+        <h2>ご注文フォーム</h2>
+        <p>
+          住所・お名前はお間違いのないようにお願いいたします。<br />
+          <strong>当園からの返信をもってご注文完了</strong>とさせていただきます。3営業日以上たっても連絡がない場合は、恐れ入りますが再度ご連絡ください。
+        </p>
+        {!useGoogleForm && <p class="note">※「送信」を押すと、入力内容が入ったメールが作成されます。そのままメールを送信してください。</p>}
+      </div>
+
+      <form
+        class="form reveal"
+        id="order-form"
+        method="post"
+        action={useGoogleForm ? f.action : `mailto:${SITE.email}`}
+        target={useGoogleForm ? 'gform-sink' : undefined}
+        data-mode={useGoogleForm ? 'google' : 'mail'}
+        data-email={SITE.email}
+      >
+        <label>
+          <span>お名前 <em>必須</em></span>
+          <input type="text" name={n('name')} required autocomplete="name" />
+        </label>
+        <div class="row">
+          <label>
+            <span>郵便番号</span>
+            <input type="text" name={n('zip')} inputmode="numeric" autocomplete="postal-code" placeholder="321-0000" />
+          </label>
+          <label class="grow">
+            <span>電話番号 <em>必須</em></span>
+            <input type="tel" name={n('tel')} required autocomplete="tel" />
+          </label>
+        </div>
+        <label>
+          <span>ご住所（都道府県から）</span>
+          <input type="text" name={n('address')} autocomplete="street-address" />
+        </label>
+        <label>
+          <span>メールアドレス</span>
+          <input type="email" name={n('email')} autocomplete="email" />
+        </label>
+        <label>
+          <span>ご注文内容 <em>必須</em></span>
+          <textarea name={n('order')} rows="7" required placeholder={'例）\nデラックス 2パック（1箱）\nお届け希望日：12月20日\nお届け先：（ご注文者と異なる場合）\nのし：お歳暮'}></textarea>
+        </label>
+        <button type="submit" class="btn btn--primary">送信する</button>
+        <p class="form__done" hidden>送信しました。当園からの返信をお待ちください。</p>
+      </form>
+      {useGoogleForm && <iframe name="gform-sink" title="送信用" hidden></iframe>}
+
+      <details class="prices reveal">
+        <summary>価格一覧（税込）を見る</summary>
+        <table>
+          <tbody>
+            {
+              PRODUCTS.map((p) => (
+                <tr>
+                  <th>{p.name}</th>
+                  <td>
+                    {'unit' in p ? `${p.unit} ` : ''}
+                    {yen(p.price)}円
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+        <p class="note">時期により価格が変わります。最新は<a href="/news/">お知らせ</a>をご確認ください。宅配料金は関東エリア1,050円〜。</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="section" id="payment">
+    <div class="container container--narrow reveal">
+      <p class="eyebrow">Payment</p>
+      <h2>お支払い・発送について</h2>
+      <p>
+        ご来店・お電話・メールでもご注文を承っております。こちらからの返信、お振込み確認の上で発送となりますので、ご了承ください。
+      </p>
+      <div class="bank card">
+        <h3>お振込み先</h3>
+        <ul>
+          {SITE.bank.map((b) => <li>{b}</li>)}
+        </ul>
+        <p class="note">※振込手数料はお客様のご負担とさせていただきます。</p>
+      </div>
+      <div class="point">
+        <h3>ポイントカード</h3>
+        <p>いつもお買い上げいただく皆様へのサービス向上のため、ポイントカードを発行しております。</p>
+        <ul>
+          <li>苺200円お買い上げにつき1ポイント（キャッシュレス決済の方は300円につき1ポイント）</li>
+          <li>ポイントがたまると特典あり</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.getElementById('order-form') as HTMLFormElement | null;
+  form?.addEventListener('submit', (e) => {
+    if (form.dataset.mode === 'google') {
+      // Googleフォームへ送信（画面はそのまま）
+      setTimeout(() => {
+        form.reset();
+        form.querySelector<HTMLElement>('.form__done')!.hidden = false;
+      }, 300);
+      return;
+    }
+    // メールアプリで送る
+    e.preventDefault();
+    const d = new FormData(form);
+    const v = (k: string) => String(d.get(k) ?? '').trim();
+    const body = [
+      'いちごいちえ ご注文',
+      '',
+      `お名前：${v('name')}`,
+      `郵便番号：${v('zip')}`,
+      `ご住所：${v('address')}`,
+      `電話番号：${v('tel')}`,
+      `メール：${v('email')}`,
+      '',
+      '【ご注文内容】',
+      v('order'),
+    ].join('\n');
+    const subject = `ご注文（${v('name')} 様）`;
+    location.href = `mailto:${form.dataset.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  });
+</script>
+
+<style>
+  .ways {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .way {
+    padding: 32px 24px;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .way:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+    color: inherit;
+  }
+  .way__icon {
+    display: inline-grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--berry-50);
+    color: var(--berry-600);
+    margin-bottom: 12px;
+  }
+  .way h3 {
+    font-size: 1rem;
+    margin-bottom: 0.2em;
+  }
+  .way__main {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--berry-600);
+    margin-bottom: 0.2em;
+    word-break: break-all;
+  }
+  .way__main--sm {
+    font-size: 1.1rem;
+  }
+  .way .note {
+    margin: 0;
+  }
+  @media (max-width: 760px) {
+    .ways {
+      grid-template-columns: 1fr;
+    }
+  }
+  .form {
+    display: grid;
+    gap: 20px;
+    background: var(--cream);
+    border-radius: var(--radius);
+    padding: clamp(24px, 4vw, 40px);
+  }
+  .form label {
+    display: grid;
+    gap: 6px;
+  }
+  .form label > span {
+    font-weight: 700;
+    font-size: 0.92rem;
+  }
+  .form em {
+    font-style: normal;
+    font-size: 0.7rem;
+    background: var(--berry-500);
+    color: #fff;
+    padding: 1px 8px;
+    border-radius: 999px;
+    margin-left: 6px;
+    vertical-align: 2px;
+  }
+  .form input,
+  .form textarea {
+    width: 100%;
+    font: inherit;
+    font-size: 16px;
+    padding: 0.8em 1em;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    color: var(--ink);
+    transition: border-color 0.2s;
+  }
+  .form input:focus,
+  .form textarea:focus {
+    outline: none;
+    border-color: var(--berry-500);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 560px) {
+    .row {
+      grid-template-columns: 1fr;
+    }
+  }
+  .form .btn {
+    justify-self: center;
+    min-width: 240px;
+    font-size: 1.05rem;
+  }
+  .form__done {
+    text-align: center;
+    font-weight: 700;
+    color: var(--leaf-700);
+    margin: 0;
+  }
+  .prices {
+    margin-top: 32px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 4px 20px;
+  }
+  .prices summary {
+    cursor: pointer;
+    font-weight: 700;
+    padding: 12px 0;
+  }
+  .prices table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+  }
+  .prices th,
+  .prices td {
+    padding: 10px 4px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+  }
+  .prices td {
+    text-align: right;
+    font-weight: 700;
+  }
+  .bank {
+    padding: 24px 28px;
+    margin-block: 28px;
+  }
+  .bank ul,
+  .point ul {
+    padding-left: 1.2em;
+    margin: 0 0 0.6em;
+  }
+  .bank li,
+  .point li {
+    margin-bottom: 0.3em;
+  }
+  .bank li::marker,
+  .point li::marker {
+    color: var(--berry-500);
+  }
+  .point p {
+    color: var(--muted);
+  }
+</style>
