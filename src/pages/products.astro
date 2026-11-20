@@ -23,7 +23,7 @@ const daily = PRODUCTS.filter((p) => !p.id.startsWith('gift'));
         <p>
           <strong>価格はすべて税込です。</strong>時期（クリスマス期間など）により価格が変わります。最新の価格は<a href="/news/">お知らせ</a>でご案内しています。
         </p>
-        <p class="note">※写真はイメージです。</p>
+        <p class="note">※ご贈答用ギフト以外の写真はイメージです。</p>
       </div>
 
       <div class="section-head reveal">
@@ -61,7 +61,7 @@ const daily = PRODUCTS.filter((p) => !p.id.startsWith('gift'));
       <div class="list">
         {
           gifts.map((p) => (
-            <article class="item card reveal" id={p.id}>
+            <article class="item item--gift card reveal" id={p.id}>
               <div class="item__img">
                 <Image src={img('image' in p ? p.image : p.id)} alt={p.name} widths={[500, 800]} sizes="(max-width: 760px) 100vw, 40vw" />
               </div>
@@ -201,6 +201,18 @@ const daily = PRODUCTS.filter((p) => !p.id.startsWith('gift'));
       aspect-ratio: 16 / 10;
       min-height: 0;
     }
+  }
+  .item--gift {
+    grid-template-columns: 1fr;
+    align-content: start;
+  }
+  .item--gift .item__img :global(img) {
+    aspect-ratio: 4 / 3;
+    min-height: 0;
+    height: auto;
+  }
+  .list:has(.item--gift) {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
   }
   .gift-head {
     margin-top: clamp(64px, 9vw, 104px);
