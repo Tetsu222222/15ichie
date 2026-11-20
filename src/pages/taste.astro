@@ -2,8 +2,9 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
-import secretSea from '../assets/photos/secret-sea.jpg';
-import secretMountain from '../assets/photos/secret-mountain.jpg';
+import drip from '../assets/photos/drip.jpg';
+import flower from '../assets/photos/flower.jpg';
+import basket from '../assets/photos/basket.jpg';
 import coolGrow from '../assets/photos/cool-grow.jpg';
 import harvest from '../assets/photos/harvest.jpg';
 import hero from '../assets/photos/hero.jpg';
@@ -13,7 +14,7 @@ const sections = [
     no: '01',
     en: 'Sea Amino Acids',
     title: '海のアミノ酸で、旨みを注ぐ',
-    img: secretSea,
+    img: basket,
     body: [
       'おいしいものをつくるには、その植物にあった栄養素を、実の部分にどれだけ注ぎ込めるかにあります。栄養の考え方は農家それぞれですが、',
       '当農園ではこの栄養に、海のアミノ酸として、アサリ・ハマグリ・カツオ・海藻などを発酵させた抽出液を多く使うことによって、旨みの部分を注ぎ込みます。',
@@ -23,7 +24,7 @@ const sections = [
     no: '02',
     en: 'Mountain Amino Acids',
     title: '山のアミノ酸で、丈夫な苗を',
-    img: secretMountain,
+    img: flower,
     body: [
       'おいしいイチゴは丈夫な苗からできます。山のアミノ酸として、タケノコ・竹酢液などを発酵させた抽出液をたくさん使うことによって、健全で害虫に強い苗を育て、減農薬を行っています。',
       'これらのアミノ酸による酵素反応で、イチゴに甘みとフレッシュな食感を与えています。',
@@ -33,7 +34,7 @@ const sections = [
     no: '03',
     en: 'Little and Often',
     title: '1日2〜3回、こまめに届ける',
-    img: hero,
+    img: drip,
     body: [
       '通常は月に1〜2度ほど、水と一緒にまとめて肥料を混ぜて流すことが多いのですが、',
       '当農園では1日2〜3回と細かく、海と山の栄養を含めた数種類の栄養を、季節によりブレンドして注ぎ込んでいます。',
@@ -63,7 +64,7 @@ const sections = [
 ---
 
 <Base title="おいしさの秘密" description="海と山のアミノ酸・酵素栽培、低温でじっくり、完熟・朝摘み。いちごいちえの苺がおいしい理由。">
-  <PageHero title="おいしさの秘密" eyebrow="Our Secret" image={secretSea} />
+  <PageHero title="おいしさの秘密" eyebrow="Our Secret" image={hero} />
 
   <section class="section intro">
     <div class="container container--narrow reveal">
