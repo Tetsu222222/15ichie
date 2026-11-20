@@ -46,8 +46,8 @@ https://15ichie.net のソースです。[Astro](https://astro.build) で作っ�
 | `/news/` | お知らせ一覧・各記事 |
 
 ### ご注文フォームについて
-初期設定では、フォームの「送信」を押すと **入力内容入りのメールが作成され、お客様のメールアプリから bsgarden@docomo.ne.jp に送られる** 方式です（サーバー不要）。
-Googleフォームで受け付けたい場合は、Googleフォームを作って `src/site.ts` の `orderForm` に送信先と `entry.○○` 番号を設定してください。
+サイトのフォームから送られた注文は、Googleフォーム「ご注文フォーム」に回答として届きます（スプレッドシートで一覧、メール通知あり）。
+Googleフォームの質問を追加・変更したときは、`src/site.ts` の `orderForm.entries` の番号（entry.○○）も直してください（Googleフォームの「事前入力した URL を取得」で確認できます）。
 
 ### 旧URLからの転送
 旧 WordPress の `/?page_id=31` や `/?p=1144` は、`worker/index.js` で新しいURLへ 301 転送します。
