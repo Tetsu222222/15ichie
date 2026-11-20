@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import { SITE, PRODUCTS } from '../site';
 import { yen } from '../lib';
-import gift30 from '../assets/photos/gift30.jpg';
+import basket from '../assets/photos/basket.jpg';
 
 const tel = SITE.tel.replaceAll('-', '');
 const f = SITE.orderForm;
@@ -12,7 +12,7 @@ const n = (key: keyof typeof f.entries) => (useGoogleForm ? f.entries[key] : key
 ---
 
 <Base title="ご注文・ご予約" description="お電話・メール・ご来店・注文フォームでご注文を承ります。ギフトはご予約制です。全国発送可。">
-  <PageHero title="ご注文・ご予約" eyebrow="Order" image={gift30} />
+  <PageHero title="ご注文・ご予約" eyebrow="Order" image={basket} />
 
   <section class="section">
     <div class="container">

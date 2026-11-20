@@ -61,7 +61,6 @@ export const PRODUCTS = [
     lead: 'ギフト30粒の半箱サイズ。',
     notes: ['ご予約制'],
     tag: 'ご贈答用',
-    image: 'gift30',
   },
   {
     id: 'gift32',
@@ -78,7 +77,6 @@ export const PRODUCTS = [
     lead: 'ギフト32粒の半箱サイズ。',
     notes: ['ご予約制'],
     tag: 'ご贈答用',
-    image: 'gift32',
   },
   {
     id: 'deluxe',
