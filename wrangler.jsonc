@@ -4,11 +4,15 @@
   "name": "15ichie",
   "compatibility_date": "2026-11-01",
   "main": "./worker/index.js",
+  "vars": {
+    // お知らせ投稿フォームの回答（スプレッドシート「公開用」シート）を「ウェブに公開」したCSVのURL
+    "NEWS_CSV_URL": "https://docs.google.com/spreadsheets/d/e/2PACX-1vTl9Apwg9Jsl_M-T-AI3r8iJtrxKOrAU9lOvBW3jgq3_M3iMhWz7CezQlW7oQE0hFMtF4H-aK_YQUNX/pub?gid=573126228&single=true&output=csv"
+  },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
     "not_found_handling": "404-page",
-    // 旧WordPressのURL（/?page_id=31 など）はトップ「/」に来るので、そこだけWorkerを通す
-    "run_worker_first": ["/", "/index.php"]
+    // 旧WordPressのURL（/?page_id=31 など）はトップ「/」に来るので、そこと /api/ だけWorkerを通す
+    "run_worker_first": ["/", "/index.php", "/api/*"]
   }
 }

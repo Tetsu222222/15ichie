@@ -34,6 +34,10 @@ date: 2026-12-05
 - 日付・価格・時間は依頼文の通りに書き、推測で補わない
 - **いちご狩りは行っていない**ので、いちご狩り・摘み取りの案内は書かない
 
+## お知らせの仕組み（2種類）
+- ふだんのお知らせは Googleフォームから投稿され、`worker/index.js` の `/api/news` が公開CSV（`wrangler.jsonc` の `NEWS_CSV_URL`）を読んでブラウザ側で一覧に差し込む（`src/scripts/form-news.ts`、個別ページは `/news/post/?id=…`）
+- Markdown（`src/content/news/`）は写真付きなど、フォームで書きにくい記事用
+
 ## その他のルール
 - サイト全体の設定（営業時間・連絡先・振込先・商品と価格）は `src/site.ts`
 - ページは `src/pages/`、共通デザインは `src/styles/global.css`（メインカラーはいちご赤 `--berry-*`、葉のグリーン `--leaf-*`）

@@ -68,10 +68,10 @@ const secrets = [
   <!-- 最新のお知らせ（帯） -->
   {
     news[0] && (
-      <div class="ticker">
+      <div class="ticker" data-news-ticker data-date={news[0].data.date.toISOString()}>
         <div class="container ticker__inner">
           <span class="ticker__label">お知らせ</span>
-          <a href={`/news/${news[0].id}/`} class="ticker__link">
+          <a href={`/news/${news[0].id}/`} class="ticker__link" data-news-ticker-link>
             <time datetime={news[0].data.date.toISOString()}>
               {news[0].data.date.getFullYear()}.{String(news[0].data.date.getMonth() + 1).padStart(2, '0')}.{String(news[0].data.date.getDate()).padStart(2, '0')}
             </time>
@@ -197,8 +197,8 @@ const secrets = [
         </div>
         <a href="/news/" class="btn btn--ghost">一覧を見る <span class="arrow">→</span></a>
       </div>
-      <div class="grid grid--3">
-        {news.map((n) => <div class="reveal"><NewsCard entry={n} /></div>)}
+      <div class="grid grid--3" data-news-list data-limit="3">
+        {news.map((n) => <div class="reveal" data-date={n.data.date.toISOString()}><NewsCard entry={n} /></div>)}
       </div>
     </div>
   </section>
@@ -206,6 +206,11 @@ const secrets = [
   <!-- 店舗情報 -->
   <ShopInfo />
 </Base>
+
+<script>
+  import { enhanceNewsLists } from '../scripts/form-news';
+  enhanceNewsLists();
+</script>
 
 <style>
   .hero {
@@ -352,16 +357,16 @@ const secrets = [
     text-decoration: none;
     flex: 1;
   }
-  .ticker__link span {
+  .ticker__link :global(span) {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .ticker__link time {
+  .ticker__link :global(time) {
     color: var(--muted);
     flex-shrink: 0;
   }
-  .ticker__link:hover span {
+  .ticker__link:hover :global(span) {
     color: var(--berry-600);
   }
   .ticker__more {
@@ -382,7 +387,7 @@ const secrets = [
       flex-direction: column;
       gap: 0;
     }
-    .ticker__link span {
+    .ticker__link :global(span) {
       white-space: normal;
     }
     .ticker__more {
