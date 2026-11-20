@@ -1,14 +1,264 @@
-<header class="site-header">
-  <div class="container header-inner">
-    <a href="/" class="brand" aria-label="いちご園ホーム">15 Ichie Strawberry Farm</a>
-    <nav aria-label="メインナビゲーション">
-      <ul class="nav-list">
-        <li><a href="/about/">農園紹介</a></li>
-        <li><a href="/taste/">おいしさの秘密</a></li>
-        <li><a href="/products/">商品情報</a></li>
-        <li><a href="/access/">アクセス</a></li>
-        <li><a href="/news/">新着情報</a></li>
+---
+import Logo from './Logo.astro';
+import { NAV, SITE } from '../site';
+
+interface Props { transparent?: boolean }
+const { transparent = false } = Astro.props;
+const path = Astro.url.pathname;
+const isActive = (href: string) => path.startsWith(href);
+---
+
+<header class:list={['header', { 'header--transparent': transparent }]} data-header>
+  <div class="container header__inner">
+    <a href="/" class="brand" aria-label={`${SITE.name} トップへ`}>
+      <Logo size={40} />
+      <span class="brand__text">
+        <span class="brand__sub">石黒いちご農園</span>
+        <span class="brand__name">いちごいちえ</span>
+      </span>
+    </a>
+
+    <button class="menu-btn" aria-expanded="false" aria-controls="site-nav">
+      <span class="menu-btn__bar"></span>
+      <span class="sr-only">メニュー</span>
+    </button>
+
+    <nav id="site-nav" class="nav" aria-label="メインメニュー">
+      <ul>
+        {
+          NAV.filter((n) => n.href !== '/order/').map((n) => (
+            <li>
+              <a href={n.href} aria-current={isActive(n.href) ? 'page' : undefined}>
+                {n.label}
+              </a>
+            </li>
+          ))
+        }
+        <li class="nav__cta">
+          <a href="/order/" class="btn btn--primary">ご注文・ご予約</a>
+        </li>
+        <li class="nav__tel">
+          <a href={`tel:${SITE.tel.replaceAll('-', '')}`}>電話 {SITE.tel}</a>
+        </li>
       </ul>
     </nav>
   </div>
 </header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const btn = document.querySelector<HTMLButtonElement>('.menu-btn');
+  const nav = document.getElementById('site-nav');
+  btn?.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!open));
+    nav?.classList.toggle('is-open', !open);
+    header?.classList.toggle('is-menu', !open);
+    document.body.classList.toggle('nav-open', !open);
+  });
+  const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 24);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgb(251 247 241 / 0.9);
+    backdrop-filter: saturate(1.5) blur(14px);
+    -webkit-backdrop-filter: saturate(1.5) blur(14px);
+    border-bottom: 1px solid rgb(233 224 213 / 0.8);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  .header--transparent {
+    position: fixed;
+    inset: 0 0 auto 0;
+    background: transparent;
+    border-color: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .header--transparent:not(.is-scrolled):not(.is-menu) .brand,
+  .header--transparent:not(.is-scrolled):not(.is-menu) .nav a:not(.btn) {
+    color: #fff;
+  }
+  .header--transparent:not(.is-scrolled):not(.is-menu) .brand__sub {
+    color: rgb(255 255 255 / 0.85);
+  }
+  .header--transparent.is-scrolled,
+  .header--transparent.is-menu {
+    background: rgb(251 247 241 / 0.92);
+    backdrop-filter: saturate(1.5) blur(14px);
+    -webkit-backdrop-filter: saturate(1.5) blur(14px);
+    border-color: rgb(233 224 213 / 0.8);
+  }
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 72px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--ink);
+    min-width: 0;
+  }
+  .brand :global(svg) {
+    flex-shrink: 0;
+  }
+  .brand__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+  .brand__sub {
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    font-weight: 700;
+  }
+  .brand__name {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.12em;
+  }
+  .nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .nav a:not(.btn) {
+    display: block;
+    padding: 0.5em 0.85em;
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.92rem;
+    position: relative;
+  }
+  .nav a:not(.btn)::after {
+    content: '';
+    position: absolute;
+    left: 0.85em;
+    right: 0.85em;
+    bottom: 0.2em;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--berry-500);
+    transform: scaleX(0);
+    transition: transform 0.25s ease;
+  }
+  .nav a:not(.btn):hover::after,
+  .nav a[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+  .nav__cta {
+    margin-left: 10px;
+  }
+  .nav__cta .btn {
+    padding: 0.75em 1.3em;
+    font-size: 0.88rem;
+  }
+  .nav__tel {
+    display: none;
+  }
+  .menu-btn {
+    display: none;
+  }
+
+  @media (max-width: 960px) {
+    .menu-btn {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--paper);
+      box-shadow: 0 4px 16px -6px rgb(0 0 0 / 0.25);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .menu-btn__bar,
+    .menu-btn__bar::before,
+    .menu-btn__bar::after {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--ink);
+      border-radius: 2px;
+      position: relative;
+      transition: transform 0.2s ease, background-color 0.2s;
+    }
+    .menu-btn__bar::before {
+      position: absolute;
+      top: -6px;
+    }
+    .menu-btn__bar::after {
+      position: absolute;
+      top: 6px;
+    }
+    .menu-btn[aria-expanded='true'] .menu-btn__bar {
+      background: transparent;
+    }
+    .menu-btn[aria-expanded='true'] .menu-btn__bar::before {
+      transform: translateY(6px) rotate(45deg);
+    }
+    .menu-btn[aria-expanded='true'] .menu-btn__bar::after {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+    .nav {
+      position: fixed;
+      inset: 72px 0 0 0;
+      background: var(--cream);
+      padding: 16px var(--gutter) 32px;
+      overflow-y: auto;
+      display: none;
+    }
+    .nav.is-open {
+      display: block;
+    }
+    .nav ul {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+    .nav a:not(.btn) {
+      padding: 1em 0.2em;
+      font-size: 1.1rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .nav a:not(.btn)::after {
+      display: none;
+    }
+    .nav__cta {
+      margin: 24px 0 0;
+    }
+    .nav__cta .btn {
+      width: 100%;
+      padding: 1.1em;
+      font-size: 1rem;
+    }
+    .nav__tel {
+      display: block;
+      text-align: center;
+      margin-top: 8px;
+    }
+    .nav .nav__tel a {
+      border: 0;
+      color: var(--berry-600);
+      font-size: 1rem;
+    }
+  }
+</style>

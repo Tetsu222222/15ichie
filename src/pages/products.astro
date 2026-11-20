@@ -1,11 +1,251 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { PRODUCTS } from '../site';
+import { yen } from '../lib';
+import basket from '../assets/photos/basket.jpg';
+import melon from '../assets/photos/melon.jpg';
+
+const images = import.meta.glob<{ default: ImageMetadata }>('../assets/photos/*.jpg', { eager: true });
+const img = (name: string) => images[`../assets/photos/${name}.jpg`].default;
+
+const gifts = PRODUCTS.filter((p) => p.id.startsWith('gift'));
+const daily = PRODUCTS.filter((p) => !p.id.startsWith('gift'));
 ---
-<BaseLayout title="商品情報 | 15 Ichie Strawberry Farm" description="いちごパック、ギフト商品、季節限定商品などのご案内。">
-  <section class="container page-header"><h1>商品情報</h1></section>
-  <section class="container grid-2">
-    <article class="card"><h2>朝摘みいちごパック</h2><p>当日収穫した新鮮ないちごを販売しています。</p></article>
-    <article class="card"><h2>ギフト用いちご</h2><p>ご贈答向けに化粧箱入りの商品をご用意しています。</p></article>
+
+<Base title="商品・価格" description="ギフト30粒・32粒、デラックス、グランデ、マル得パックなど、いちごいちえの商品と価格（税込）。全国発送承ります。">
+  <PageHero title="商品・価格" eyebrow="Products" image={basket} />
+
+  <section class="section">
+    <div class="container">
+      <div class="notice reveal">
+        <p>
+          <strong>価格はすべて税込です。</strong>時期（クリスマス期間など）により価格が変わります。最新の価格は<a href="/news/">お知らせ</a>でご案内しています。
+        </p>
+        <p class="note">※写真はイメージです。</p>
+      </div>
+
+      <div class="section-head reveal">
+        <p class="eyebrow">For Daily</p>
+        <h2>パック・ご家庭用</h2>
+      </div>
+      <div class="list">
+        {
+          daily.map((p) => (
+            <article class="item card reveal" id={p.id}>
+              <div class="item__img">
+                <Image src={img('image' in p ? p.image : p.id)} alt={p.name} widths={[500, 800]} sizes="(max-width: 760px) 100vw, 40vw" />
+              </div>
+              <div class="item__body">
+                <span class="item__tag">{p.tag}</span>
+                <h3>{p.name}</h3>
+                <p class="item__price">
+                  {'unit' in p && <small>{p.unit}</small>}
+                  {yen(p.price)}
+                  <small>円（税込）</small>
+                </p>
+                <p>{p.lead}</p>
+                {p.notes.length > 0 && <ul>{p.notes.map((n) => <li>{n}</li>)}</ul>}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="section-head reveal gift-head">
+        <p class="eyebrow">For Gift</p>
+        <h2>ご贈答用ギフト</h2>
+        <p class="lead">すべてご予約制です。事前にご連絡ください。</p>
+      </div>
+      <div class="list">
+        {
+          gifts.map((p) => (
+            <article class="item card reveal" id={p.id}>
+              <div class="item__img">
+                <Image src={img('image' in p ? p.image : p.id)} alt={p.name} widths={[500, 800]} sizes="(max-width: 760px) 100vw, 40vw" />
+              </div>
+              <div class="item__body">
+                <span class="item__tag">{p.tag}</span>
+                <h3>{p.name}</h3>
+                <p class="item__price">
+                  {yen(p.price)}
+                  <small>円（税込）</small>
+                </p>
+                <p>{p.lead}</p>
+                {p.notes.length > 0 && <ul>{p.notes.map((n) => <li>{n}</li>)}</ul>}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
   </section>
-  <section class="container card"><p>ご注文はお電話にて承っております。詳細は営業日にお問い合わせください。</p></section>
-</BaseLayout>
+
+  <section class="section section--white">
+    <div class="container container--narrow">
+      <div class="section-head reveal">
+        <p class="eyebrow">Information</p>
+        <h2>ご購入・発送について</h2>
+      </div>
+      <ul class="points reveal">
+        <li>1箱単位でお買い上げの際は、1箱につき<strong>100円</strong>いただきます。</li>
+        <li>すべての商品に「お歳暮」「お年賀」ののしをお付けできます。</li>
+        <li>直売所にて宅配を承ります（全国発送可）。</li>
+        <li>宅配料金は関東エリア<strong>1,050円〜</strong>。個数・重量により変わりますので、詳しくはお問い合わせください。</li>
+      </ul>
+      <div class="reveal actions">
+        <a href="/order/" class="btn btn--primary">ご注文・ご予約へ <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container melon reveal">
+      <div class="melon__img">
+        <Image src={melon} alt="青肉メロン" widths={[500, 900]} sizes="(max-width: 760px) 100vw, 45vw" />
+      </div>
+      <div>
+        <p class="eyebrow">Summer</p>
+        <h2>夏はメロンも</h2>
+        <p>
+          夏には、青肉メロンらしい爽やかな甘みのメロンを、完全予約制で販売することがあります。販売時期や価格は<a href="/news/">お知らせ</a>でご案内します。
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .notice {
+    background: var(--berry-50);
+    border: 1px solid var(--berry-100);
+    border-radius: var(--radius-sm);
+    padding: 18px 22px;
+    margin-bottom: 56px;
+  }
+  .notice p {
+    margin: 0;
+  }
+  .notice .note {
+    margin-top: 4px;
+  }
+  .list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 500px), 1fr));
+    gap: 24px;
+  }
+  .item {
+    display: grid;
+    grid-template-columns: 44% 1fr;
+    overflow: hidden;
+    scroll-margin-top: 96px;
+  }
+  .item__img :global(img) {
+    width: 100%;
+    height: 100%;
+    min-height: 220px;
+    object-fit: cover;
+  }
+  .item__body {
+    padding: 24px 26px;
+  }
+  .item__tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--leaf-700);
+    background: var(--leaf-50);
+    padding: 2px 10px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+  }
+  .item h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.1em;
+  }
+  .item__price {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--berry-600);
+    margin-bottom: 0.5em;
+    line-height: 1.4;
+  }
+  .item__price small {
+    font-family: var(--font-sans);
+    font-size: 0.76rem;
+    color: var(--muted);
+    font-weight: 500;
+    margin-inline: 2px 4px;
+  }
+  .item__body p:not(.item__price) {
+    font-size: 0.92rem;
+    color: var(--muted);
+    line-height: 1.85;
+    margin-bottom: 0.6em;
+  }
+  .item ul {
+    margin: 0;
+    padding-left: 1.1em;
+    font-size: 0.85rem;
+  }
+  .item li::marker {
+    color: var(--berry-500);
+  }
+  @media (max-width: 560px) {
+    .item {
+      grid-template-columns: 1fr;
+    }
+    .item__img :global(img) {
+      aspect-ratio: 16 / 10;
+      min-height: 0;
+    }
+  }
+  .gift-head {
+    margin-top: clamp(64px, 9vw, 104px);
+  }
+  .points {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 32px;
+    display: grid;
+    gap: 12px;
+  }
+  .points li {
+    position: relative;
+    padding: 16px 20px 16px 52px;
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+  }
+  .points li::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 1.45em;
+    width: 16px;
+    height: 16px;
+    border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+    background: var(--berry-500);
+  }
+  .actions {
+    text-align: center;
+  }
+  .melon {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 6vw, 72px);
+    align-items: center;
+  }
+  .melon__img :global(img) {
+    border-radius: var(--radius);
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    width: 100%;
+  }
+  @media (max-width: 760px) {
+    .melon {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

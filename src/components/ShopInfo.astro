@@ -1,0 +1,67 @@
+---
+import { Image } from 'astro:assets';
+import { SITE } from '../site';
+import exterior from '../assets/photos/exterior.jpg';
+const tel = SITE.tel.replaceAll('-', '');
+---
+
+<section class="section section--white shop">
+  <div class="container shop__grid">
+    <div class="shop__img reveal">
+      <Image src={exterior} alt="宇都宮市の田園に並ぶいちごハウス" widths={[600, 900, 1200]} sizes="(max-width: 860px) 100vw, 50vw" />
+    </div>
+    <div class="reveal">
+      <p class="eyebrow">Shop</p>
+      <h2>直売所のご案内</h2>
+      <dl class="info">
+        <dt>販売時期</dt>
+        <dd>{SITE.season}</dd>
+        <dt>営業時間</dt>
+        <dd>{SITE.hours}<br /><span class="note">{SITE.hoursNote}。シーズンにより変わる場合があります。最新は<a href="/news/">お知らせ</a>をご確認ください。</span></dd>
+        <dt>定休日</dt>
+        <dd>{SITE.closed}</dd>
+        <dt>所在地</dt>
+        <dd>{SITE.address}<br /><span class="note">{SITE.naviHint}</span></dd>
+        <dt>お電話</dt>
+        <dd><a href={`tel:${tel}`} class="tel">{SITE.tel}</a><span class="note">（石黒携帯）</span></dd>
+      </dl>
+      <div class="shop__actions">
+        <a href="/access/" class="btn btn--ghost">地図・アクセス <span class="arrow">→</span></a>
+        <a href={`tel:${tel}`} class="btn btn--primary">電話をかける</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .shop__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: center;
+  }
+  .shop__img :global(img) {
+    border-radius: var(--radius);
+    aspect-ratio: 4 / 3.4;
+    object-fit: cover;
+    width: 100%;
+  }
+  .tel {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-decoration: none;
+    margin-right: 6px;
+  }
+  .shop__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  @media (max-width: 860px) {
+    .shop__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

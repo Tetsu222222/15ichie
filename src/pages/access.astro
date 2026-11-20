@@ -1,7 +1,95 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { SITE } from '../site';
+import exterior from '../assets/photos/exterior.jpg';
+
+const { lat, lng } = SITE.geo;
+const embed = `https://maps.google.com/maps?q=${lat},${lng}&z=15&hl=ja&output=embed`;
+const mapLink = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+const tel = SITE.tel.replaceAll('-', '');
 ---
-<BaseLayout title="地図・アクセス | 15 Ichie Strawberry Farm" description="15 Ichie Strawberry Farmへのアクセス方法、所在地、営業時間をご案内します。">
-  <section class="container page-header"><h1>地図・アクセス</h1></section>
-  <section class="container card"><p>所在地：〒000-0000 〇〇県〇〇市〇〇町1-2-3</p><p>営業時間：10:00-16:00（季節営業・不定休）</p><p>お車でお越しの際は近隣駐車場をご利用ください。</p></section>
-</BaseLayout>
+
+<Base title="地図・アクセス" description={`石黒いちご農園いちごいちえの所在地：${SITE.address}。カーナビ・Googleマップで「石黒苺農園」と検索してください。`}>
+  <PageHero title="地図・アクセス" eyebrow="Access" image={exterior} />
+
+  <section class="section">
+    <div class="container access">
+      <div class="map reveal">
+        <iframe src={embed} title="石黒いちご農園の地図" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div class="reveal">
+        <dl class="info">
+          <dt>生産地</dt>
+          <dd>{SITE.address}</dd>
+          <dt>ナビ検索</dt>
+          <dd>{SITE.naviHint}</dd>
+          <dt>生産農家</dt>
+          <dd>苺農園「いちごいちえ」<br />園主：{SITE.owner}</dd>
+          <dt>連絡先</dt>
+          <dd><a href={`tel:${tel}`}>{SITE.tel}</a></dd>
+          <dt>FAX</dt>
+          <dd>{SITE.fax}</dd>
+        </dl>
+        <div class="actions">
+          <a href={mapLink} class="btn btn--primary" target="_blank" rel="noopener">Googleマップで開く <span class="arrow">↗</span></a>
+          <a href={`tel:${tel}`} class="btn btn--ghost">電話をかける</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white">
+    <div class="container container--narrow reveal">
+      <h2>ご来園のみなさまへ</h2>
+      <ul class="cautions">
+        <li>ハウス周辺は用水路が流れており、大型農作業車も通行しております。小さなお子様からは目を離さぬよう、お願いいたします。</li>
+        <li>天候や販売状況により、苺が売り切れている場合がございます。お越しの前にお電話でお問い合わせいただくと確実です。</li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .access {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
+  }
+  .map {
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    aspect-ratio: 4 / 3;
+    background: var(--sand);
+  }
+  .map iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  @media (max-width: 860px) {
+    .access {
+      grid-template-columns: 1fr;
+    }
+  }
+  .cautions {
+    padding-left: 1.2em;
+    margin: 0;
+    color: var(--muted);
+  }
+  .cautions li {
+    margin-bottom: 0.6em;
+  }
+  .cautions li::marker {
+    color: var(--berry-500);
+  }
+</style>

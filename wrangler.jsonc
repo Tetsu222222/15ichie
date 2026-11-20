@@ -1,0 +1,14 @@
+{
+  // Cloudflare Workers（静的アセット＋旧URL転送の小さなWorker・無料プラン）
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "15ichie",
+  "compatibility_date": "2026-11-01",
+  "main": "./worker/index.js",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    // 旧WordPressのURL（/?page_id=31 など）はトップ「/」に来るので、そこだけWorkerを通す
+    "run_worker_first": ["/", "/index.php"]
+  }
+}

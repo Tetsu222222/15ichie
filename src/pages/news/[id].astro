@@ -1,0 +1,110 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getNews, formatDate, excerpt } from '../../lib';
+
+export async function getStaticPaths() {
+  const news = await getNews();
+  return news.map((entry, i) => ({
+    params: { id: entry.id },
+    props: { entry, newer: news[i - 1], older: news[i + 1] },
+  }));
+}
+
+const { entry, newer, older } = Astro.props;
+const { Content } = await render(entry);
+const { title, date, cover } = entry.data;
+---
+
+<Base title={title} description={excerpt(entry, 110)} ogImage={cover}>
+  <article class="section article">
+    <div class="container container--narrow">
+      <a href="/news/" class="back">← お知らせ一覧</a>
+      <header class="article__head">
+        <time datetime={date.toISOString()}>{formatDate(date)}</time>
+        <h1>{title}</h1>
+      </header>
+      {cover && <Image src={cover} alt="" widths={[800, 1400]} sizes="(max-width: 860px) 100vw, 820px" class="article__cover" />}
+      <div class="prose">
+        <Content />
+      </div>
+      <nav class="pager" aria-label="前後のお知らせ">
+        {newer ? <a href={`/news/${newer.id}/`}><small>新しい記事</small>{newer.data.title}</a> : <span />}
+        {older ? <a href={`/news/${older.id}/`} class="older"><small>古い記事</small>{older.data.title}</a> : <span />}
+      </nav>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .article {
+    padding-top: clamp(40px, 6vw, 72px);
+  }
+  .back {
+    display: inline-block;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+    margin-bottom: 28px;
+  }
+  .article__head {
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+    border-bottom: 2px solid var(--berry-100);
+  }
+  .article__head time {
+    display: block;
+    color: var(--muted);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    font-size: 0.88rem;
+    margin-bottom: 6px;
+  }
+  .article__head h1 {
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    margin: 0;
+  }
+  .article__cover {
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+    width: 100%;
+  }
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 64px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+  .pager a {
+    display: block;
+    text-decoration: none;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    font-weight: 700;
+    font-size: 0.92rem;
+  }
+  .pager a:hover {
+    border-color: var(--berry-200);
+    color: var(--berry-700);
+  }
+  .pager small {
+    display: block;
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 0.75rem;
+  }
+  .pager .older {
+    text-align: right;
+  }
+  @media (max-width: 560px) {
+    .pager {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
