@@ -5,17 +5,19 @@ import PageHero from '../components/PageHero.astro';
 import ShopInfo from '../components/ShopInfo.astro';
 import { SITE } from '../site';
 import greenhouse from '../assets/photos/greenhouse.jpg';
-import exterior from '../assets/photos/exterior.jpg';
-import flower from '../assets/photos/flower.jpg';
-import hero from '../assets/photos/hero.jpg';
+import farmBerry from '../assets/photos/farm-berry.jpg';
+import farmFlower from '../assets/photos/farm-flower.jpg';
+import farmField from '../assets/photos/farm-field.jpg';
+import farmRoad from '../assets/photos/farm-road.jpg';
 import coolGrow from '../assets/photos/cool-grow.jpg';
 import basket from '../assets/photos/basket.jpg';
 
 const gallery = [
   { img: greenhouse, cap: 'ハウス内の様子' },
-  { img: hero, cap: '苺' },
-  { img: flower, cap: '苺の花' },
-  { img: exterior, cap: 'ハウス周辺' },
+  { img: farmBerry, cap: '苺' },
+  { img: farmFlower, cap: '苺の花' },
+  { img: farmField, cap: 'ハウス周辺' },
+  { img: farmRoad, cap: 'ハウス周辺' },
 ];
 ---
 
@@ -78,7 +80,6 @@ const gallery = [
           ))
         }
       </div>
-      <p class="note">※写真はイメージです。</p>
     </div>
   </section>
 
@@ -171,6 +172,9 @@ const gallery = [
   .gallery .wide {
     grid-column: span 2;
     grid-row: span 2;
+  }
+  .gallery figure:last-child {
+    grid-column: span 2;
   }
   .gallery :global(img) {
     width: 100%;
