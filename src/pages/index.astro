@@ -59,10 +59,10 @@ const secrets = [
     <div class="hero__scroll" aria-hidden="true">SCROLL</div>
   </section>
 
-  <!-- 最新のお知らせ（帯） -->
+  <!-- 最新のお知らせ（帯）：一番新しいお知らせが60日以内のときだけ表示（form-news.ts） -->
   {
     news[0] && (
-      <div class="ticker" data-news-ticker data-date={news[0].data.date.toISOString()}>
+      <div class="ticker" data-news-ticker data-date={news[0].data.date.toISOString()} hidden>
         <div class="container ticker__inner">
           <span class="ticker__label">お知らせ</span>
           <a href={`/news/${news[0].id}/`} class="ticker__link" data-news-ticker-link>
