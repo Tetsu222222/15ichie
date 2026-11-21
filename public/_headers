@@ -1,0 +1,8 @@
+# セキュリティヘッダー（Cloudflare Pages / Workers Static Assets が読み込む）
+# CSP はインラインスクリプトや外部埋め込みを壊すおそれがあるため、ここでは付けていない
+/*
+  Strict-Transport-Security: max-age=63072000; includeSubDomains
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), payment=(), usb=()
