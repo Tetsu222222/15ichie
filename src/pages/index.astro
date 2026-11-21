@@ -7,9 +7,6 @@ import { SITE, PRODUCTS } from '../site';
 import { getNews, yen } from '../lib';
 import hero from '../assets/photos/hero.jpg';
 import basket from '../assets/photos/basket.jpg';
-import drip from '../assets/photos/drip.jpg';
-import coolGrow from '../assets/photos/cool-grow.jpg';
-import harvest from '../assets/photos/harvest.jpg';
 import deluxe from '../assets/photos/deluxe.jpg';
 import gift30 from '../assets/photos/gift30.jpg';
 import grande from '../assets/photos/grande.jpg';
@@ -27,19 +24,16 @@ const secrets = [
     no: '01',
     title: '海と山のアミノ酸',
     text: 'アサリ・ハマグリ・カツオ・海藻、タケノコ・竹酢液を発酵させた抽出液で、旨みと丈夫な苗を育てます。',
-    img: drip,
   },
   {
     no: '02',
     title: '低温でじっくり',
     text: 'あえて低めの温度で育て、時間をかけて実を熟させる。そのぶん栄養がゆっくり実に注がれます。',
-    img: coolGrow,
   },
   {
     no: '03',
     title: '完熟・朝摘み',
     text: '完熟した苺を朝の寒い時間に収穫し、その日のうちに出荷。いちばんおいしい瞬間をお届けします。',
-    img: harvest,
   },
 ];
 ---
@@ -109,6 +103,22 @@ const secrets = [
     </div>
   </section>
 
+  <!-- お知らせ -->
+  <section class="section section--sand">
+    <div class="container">
+      <div class="section-head products-head reveal">
+        <div>
+          <p class="eyebrow">News</p>
+          <h2>お知らせ</h2>
+        </div>
+        <a href="/news/" class="btn btn--ghost">一覧を見る <span class="arrow">→</span></a>
+      </div>
+      <div class="grid grid--3" data-news-list data-limit="3">
+        {news.map((n) => <div class="reveal" data-date={n.data.date.toISOString()}><NewsCard entry={n} /></div>)}
+      </div>
+    </div>
+  </section>
+
   <!-- おいしさの秘密 -->
   <section class="section section--white">
     <div class="container">
@@ -121,9 +131,6 @@ const secrets = [
         {
           secrets.map((s) => (
             <article class="secret reveal">
-              <div class="secret__img">
-                <Image src={s.img} alt="" widths={[500, 800]} sizes="(max-width: 860px) 100vw, 33vw" />
-              </div>
               <p class="secret__no">{s.no}</p>
               <h3>{s.title}</h3>
               <p>{s.text}</p>
@@ -184,22 +191,6 @@ const secrets = [
       <h2>大切な方へ、<br class="sp" />朝摘みのおいしさを。</h2>
       <p>直売所での宅配手配のほか、お電話・メール・フォームでのご注文で全国へお届けします。</p>
       <a href="/order/" class="btn btn--light">ご注文方法を見る <span class="arrow">→</span></a>
-    </div>
-  </section>
-
-  <!-- お知らせ -->
-  <section class="section section--sand">
-    <div class="container">
-      <div class="section-head products-head reveal">
-        <div>
-          <p class="eyebrow">News</p>
-          <h2>お知らせ</h2>
-        </div>
-        <a href="/news/" class="btn btn--ghost">一覧を見る <span class="arrow">→</span></a>
-      </div>
-      <div class="grid grid--3" data-news-list data-limit="3">
-        {news.map((n) => <div class="reveal" data-date={n.data.date.toISOString()}><NewsCard entry={n} /></div>)}
-      </div>
     </div>
   </section>
 
@@ -455,6 +446,11 @@ const secrets = [
     grid-template-columns: repeat(3, 1fr);
     gap: clamp(24px, 3vw, 40px);
     margin-bottom: 48px;
+  }
+  .secret {
+    background: var(--cream);
+    border-radius: var(--radius);
+    padding: clamp(28px, 3vw, 40px) clamp(24px, 3vw, 36px);
   }
   .secret__img {
     overflow: hidden;
