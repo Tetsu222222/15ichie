@@ -10,12 +10,17 @@ const news = await getNews();
 
 <Base title="お知らせ" description="営業日・販売価格・販売開始など、いちごいちえからのお知らせです。">
   <PageHero title="お知らせ" eyebrow="News" image={flower} />
-  <section class="section">
+  <section class="section" data-news-section>
     <div class="container">
-      <div class="grid grid--3">
-        {news.map((n) => <div class="reveal"><NewsCard entry={n} /></div>)}
+      <div class="grid grid--3" data-news-list>
+        {news.map((n) => <div class="reveal" data-date={n.data.date.toISOString()}><NewsCard entry={n} /></div>)}
       </div>
-      {news.length === 0 && <p>現在お知らせはありません。</p>}
+      {news.length === 0 && <p data-news-empty>現在お知らせはありません。</p>}
     </div>
   </section>
 </Base>
+
+<script>
+  import { enhanceNewsLists } from '../../scripts/form-news';
+  enhanceNewsLists();
+</script>

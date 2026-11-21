@@ -18,7 +18,7 @@ const { title, date } = entry.data;
   <span class="news-card__more">続きを読む →</span>
 </a>
 
-<style>
+<style is:global>
   .news-card {
     display: flex;
     flex-direction: column;
@@ -44,7 +44,7 @@ const { title, date } = entry.data;
     letter-spacing: 0.08em;
     margin-bottom: 8px;
   }
-  .badge {
+  .news-card .badge {
     background: var(--berry-500);
     color: #fff;
     font-size: 0.66rem;
@@ -52,7 +52,7 @@ const { title, date } = entry.data;
     border-radius: 999px;
     letter-spacing: 0.1em;
   }
-  h3 {
+  .news-card h3 {
     font-size: 1.08rem;
     margin-bottom: 0.5em;
   }
