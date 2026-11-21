@@ -27,14 +27,14 @@ export const SITE = {
    * （Googleフォームの「事前入力したURLを取得」で entry.○○ の番号を確認できます）
    */
   orderForm: {
-    action: '',
+    action: 'https://docs.google.com/forms/d/e/1FAIpQLSeOJ-Qex9Waf_NRf3Fkdv1UOpt4zJDzOZ3xuC3ivtRRsWkwxg/formResponse',
     entries: {
-      name: '',
-      zip: '',
-      address: '',
-      tel: '',
-      email: '',
-      order: '',
+      name: 'entry.740250653',
+      zip: 'entry.1739339688',
+      address: 'entry.2107088272',
+      tel: 'entry.1142574108',
+      email: 'entry.2125797052',
+      order: 'entry.289276212',
     },
   },
   bank: [
