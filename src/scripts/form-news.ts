@@ -59,15 +59,18 @@ function card(n: FormNews): HTMLElement {
   return wrap;
 }
 
+/** お知らせ帯を出す期間（投稿から何日以内か） */
+const TICKER_DAYS = 60;
+
 /** [data-news-list] の中身（data-date 付きの要素）にフォーム投稿を混ぜて新しい順に並べ直す */
 export async function enhanceNewsLists() {
   const lists = document.querySelectorAll<HTMLElement>('[data-news-list]');
   const tickers = document.querySelectorAll<HTMLElement>('[data-news-ticker]');
   if (!lists.length && !tickers.length) return;
   const items = await fetchFormNews();
-  if (!items.length) return;
 
   lists.forEach((list) => {
+    if (!items.length) return;
     const limit = Number(list.dataset.limit) || Infinity;
     const all = [...list.querySelectorAll<HTMLElement>(':scope > [data-date]')];
     items.forEach((n) => all.push(card(n)));
@@ -77,12 +80,17 @@ export async function enhanceNewsLists() {
   });
 
   tickers.forEach((t) => {
+    let latestTime = t.dataset.date ? new Date(t.dataset.date).getTime() : 0;
     const latest = items[0];
-    const cur = t.dataset.date ? new Date(t.dataset.date).getTime() : 0;
-    if (new Date(latest.date).getTime() <= cur) return;
-    const a = t.querySelector<HTMLAnchorElement>('a[data-news-ticker-link]');
-    if (!a) return;
-    a.href = postUrl(latest);
-    a.innerHTML = `<time datetime="${esc(latest.date)}">${formatDate(latest.date)}</time><span>${esc(latest.title)}</span>`;
+    if (latest && new Date(latest.date).getTime() > latestTime) {
+      latestTime = new Date(latest.date).getTime();
+      const a = t.querySelector<HTMLAnchorElement>('a[data-news-ticker-link]');
+      if (a) {
+        a.href = postUrl(latest);
+        a.innerHTML = `<time datetime="${esc(latest.date)}">${formatDate(latest.date)}</time><span>${esc(latest.title)}</span>`;
+      }
+    }
+    // 古いお知らせしかないときは帯を出さない
+    t.hidden = Date.now() - latestTime > TICKER_DAYS * 24 * 60 * 60 * 1000;
   });
 }
