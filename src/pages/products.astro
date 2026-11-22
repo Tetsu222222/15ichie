@@ -5,7 +5,6 @@ import PageHero from '../components/PageHero.astro';
 import { PRODUCTS } from '../site';
 import { yen } from '../lib';
 import basket from '../assets/photos/basket.jpg';
-import melon from '../assets/photos/melon.jpg';
 
 const images = import.meta.glob<{ default: ImageMetadata }>('../assets/photos/*.jpg', { eager: true });
 const img = (name: string) => images[`../assets/photos/${name}.jpg`].default;
@@ -99,20 +98,6 @@ const daily = PRODUCTS.filter((p) => !p.id.startsWith('gift'));
     </div>
   </section>
 
-  <section class="section">
-    <div class="container melon reveal">
-      <div class="melon__img">
-        <Image src={melon} alt="青肉メロン" widths={[500, 900]} sizes="(max-width: 760px) 100vw, 45vw" />
-      </div>
-      <div>
-        <p class="eyebrow">Summer</p>
-        <h2>夏はメロンも</h2>
-        <p>
-          夏には、青肉メロンらしい爽やかな甘みのメロンを、完全予約制で販売することがあります。販売時期や価格は<a href="/news/">お知らせ</a>でご案内します。
-        </p>
-      </div>
-    </div>
-  </section>
 </Base>
 
 <style>
@@ -241,22 +226,5 @@ const daily = PRODUCTS.filter((p) => !p.id.startsWith('gift'));
   }
   .actions {
     text-align: center;
-  }
-  .melon {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(32px, 6vw, 72px);
-    align-items: center;
-  }
-  .melon__img :global(img) {
-    border-radius: var(--radius);
-    aspect-ratio: 3 / 2;
-    object-fit: cover;
-    width: 100%;
-  }
-  @media (max-width: 760px) {
-    .melon {
-      grid-template-columns: 1fr;
-    }
   }
 </style>
