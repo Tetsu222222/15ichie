@@ -48,7 +48,7 @@ const secrets = [
       <p class="hero__place">栃木県宇都宮市 ・ 石黒いちご農園</p>
       <h1 class="hero__title">
         <span>朝摘み、完熟。</span>
-        <span>一期一会の、あまい いちご。</span>
+        <span><span class="nb">一期一会の、</span><span class="nb">あまい いちご。</span></span>
       </h1>
       <p class="hero__lead">{SITE.catch}<br />海と山の恵みで、ひと粒ずつ丁寧に育てています。</p>
       <div class="hero__actions">
@@ -259,8 +259,12 @@ const secrets = [
     margin-bottom: 0.5em;
     text-shadow: 0 2px 30px rgb(0 0 0 / 0.25);
   }
-  .hero__title span {
+  .hero__title > span {
     display: block;
+  }
+  /* 語句の途中で改行しない（スマホで「あ／まい」と割れないように） */
+  .hero__title .nb {
+    display: inline-block;
   }
   .hero__lead {
     font-size: clamp(0.95rem, 1.8vw, 1.1rem);
