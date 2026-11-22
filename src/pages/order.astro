@@ -112,7 +112,7 @@ const n = (key: keyof typeof f.entries) => (useGoogleForm ? f.entries[key] : key
                   <th>{p.name}</th>
                   <td>
                     {'unit' in p ? `${p.unit} ` : ''}
-                    {yen(p.price)}円
+                    {yen(p.price)}円{'from' in p && p.from ? '〜' : ''}
                   </td>
                 </tr>
               ))

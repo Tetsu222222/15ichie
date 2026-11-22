@@ -167,7 +167,7 @@ const secrets = [
                 <p class="product__price">
                   {'unit' in p && <small>{p.unit}</small>}
                   {yen(p.price)}
-                  <small>円（税込）</small>
+                  <small>円{'from' in p && p.from ? '〜' : ''}（税込）</small>
                 </p>
                 <p class="product__lead">{p.lead}</p>
               </div>
@@ -175,6 +175,7 @@ const secrets = [
           ))
         }
       </div>
+      <p class="price-note reveal">※価格は時期によって変わるため、詳細は<a href="/news/">お知らせ（新着情報）</a>にてご案内します。</p>
       <p class="center reveal">
         <a href="/products/" class="btn btn--primary">すべての商品・価格 <span class="arrow">→</span></a>
       </p>
@@ -571,6 +572,13 @@ const secrets = [
     margin: 0;
     line-height: 1.8;
   }
+  .price-note {
+    margin: 24px 0 0;
+    font-size: 0.9rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  .price-note + .center,
   .grid + .center {
     margin-top: 48px;
   }

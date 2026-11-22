@@ -82,6 +82,7 @@ export const PRODUCTS = [
     id: 'deluxe',
     name: 'デラックス',
     price: 780,
+    from: true, // 「〜」を付ける（時期により変わる）
     unit: '1パック',
     lead: '大粒を平らに並べた豪華な平積みパック。総量約320g。ご贈答にも一番人気です。',
     notes: ['1箱2パック入り'],
@@ -90,7 +91,8 @@ export const PRODUCTS = [
   {
     id: 'grande',
     name: 'グランデ',
-    price: 580,
+    price: 480,
+    from: true, // 「〜」を付ける（時期により変わる）
     unit: '1パック',
     lead: 'いろいろな大きさの苺を詰め合わせ。総量約260g。贈答用にもご家庭用にも。',
     notes: ['4パック入りと2パック入りの箱があります'],
@@ -99,7 +101,8 @@ export const PRODUCTS = [
   {
     id: 'marutoku',
     name: 'マル得パック',
-    price: 350,
+    price: 300,
+    from: true, // 「〜」を付ける（時期により変わる）
     unit: '1パック',
     lead: '形が不ぞろいなものや小粒を集めたパック。グランデと総量は同じの、お得なご家庭用です。',
     notes: [],
@@ -109,6 +112,7 @@ export const PRODUCTS = [
     id: 'jam',
     name: 'ジャム用',
     price: 300,
+    from: true, // 「〜」を付ける（時期により変わる）
     lead: 'ジャムやスムージーなど、加工にぴったりの苺です。',
     notes: [],
     tag: '加工用',
