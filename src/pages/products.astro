@@ -21,8 +21,7 @@ const daily = PRODUCTS.filter((p) => !p.id.startsWith('gift'));
     <div class="container">
       <div class="notice reveal">
         <p>
-          <strong>価格はすべて税込です。</strong>時期（クリスマス期間など）により価格が変わります。最新の価格は<a href="/news/">お知らせ</a>でご案内しています。
-        </p>
+          <strong>価格はすべて税込です。</strong>価格は時期によって変わるため、詳細は<a href="/news/">お知らせ（新着情報）</a>にてご案内します。</p>
         <p class="note">※ご贈答用ギフト以外の写真はイメージです。</p>
       </div>
 
@@ -43,7 +42,7 @@ const daily = PRODUCTS.filter((p) => !p.id.startsWith('gift'));
                 <p class="item__price">
                   {'unit' in p && <small>{p.unit}</small>}
                   {yen(p.price)}
-                  <small>円（税込）</small>
+                  <small>円{'from' in p && p.from ? '〜' : ''}（税込）</small>
                 </p>
                 <p>{p.lead}</p>
                 {p.notes.length > 0 && <ul>{p.notes.map((n) => <li>{n}</li>)}</ul>}
@@ -70,7 +69,7 @@ const daily = PRODUCTS.filter((p) => !p.id.startsWith('gift'));
                 <h3>{p.name}</h3>
                 <p class="item__price">
                   {yen(p.price)}
-                  <small>円（税込）</small>
+                  <small>円{'from' in p && p.from ? '〜' : ''}（税込）</small>
                 </p>
                 <p>{p.lead}</p>
                 {p.notes.length > 0 && <ul>{p.notes.map((n) => <li>{n}</li>)}</ul>}
