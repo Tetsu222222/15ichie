@@ -1,18 +1,29 @@
 {
-  // Cloudflare Workers（静的アセット＋旧URL転送の小さなWorker・無料プラン）
+  // Cloudflare Workers（静的アセット＋小さなWorker・無料プラン）
+  // Worker の役割：旧URLの転送 / お知らせ（/api/news） / ご注文フォームのメール送信（/api/contact）
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "15ichie",
   "compatibility_date": "2026-11-01",
-  "main": "./worker/index.js",
+  "main": "./worker/index.ts",
   "vars": {
     // お知らせ投稿フォームの回答（スプレッドシート「公開用」シート）を「ウェブに公開」したCSVのURL
     "NEWS_CSV_URL": "https://docs.google.com/spreadsheets/d/e/2PACX-1vTl9Apwg9Jsl_M-T-AI3r8iJtrxKOrAU9lOvBW3jgq3_M3iMhWz7CezQlW7oQE0hFMtF4H-aK_YQUNX/pub?gid=573126228&single=true&output=csv"
   },
+  // ご注文フォームのメール送信（Cloudflare Email Routing の send_email）
+  // 送り先は Secret の CONTACT_TO（カンマ区切り）。公開リポジトリなので、アドレスはここに書かない
+  //   設定：npx wrangler secret put CONTACT_TO  または  ダッシュボード → Worker → Settings → Variables and Secrets
+  // 送り先は Email Routing の「確認済みの宛先アドレス」である必要がある（Workers 無料プランの条件）
+  "send_email": [
+    {
+      "name": "SEND_EMAIL",
+      "allowed_sender_addresses": ["noreply@15ichie.net"]
+    }
+  ],
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
     "not_found_handling": "404-page",
-    // 旧WordPressのURL（/?page_id=31 など）はトップ「/」に来るので、そこと /api/ だけWorkerを通す
+    // ページは静的配信。Worker を通すのは /api/* と、旧WordPressのURL（/?page_id=31 など）が届くトップ「/」だけ
     "run_worker_first": ["/", "/index.php", "/api/*"]
   }
 }

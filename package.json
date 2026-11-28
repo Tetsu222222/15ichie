@@ -8,7 +8,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "deploy": "astro build && wrangler deploy"
+    "deploy": "astro build && wrangler deploy",
+    "typecheck": "tsc -p worker/tsconfig.json",
+    "types": "wrangler types worker/worker-configuration.d.ts"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.10",
@@ -19,6 +21,7 @@
     "remark-breaks": "^4.0.0"
   },
   "devDependencies": {
+    "typescript": "^5.9.3",
     "wrangler": "^4.165.0"
   }
 }
