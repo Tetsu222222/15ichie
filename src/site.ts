@@ -20,23 +20,6 @@ export const SITE = {
   hours: '11:00〜14:00',
   hoursNote: '営業時間外の受け取りはご連絡ください',
   closed: '水曜日・日曜日',
-  /**
-   * ご注文フォームの送信先。
-   * 空のままなら、入力内容をメールアプリで送る方式になります。
-   * Googleフォームを作ったら action と entries の番号を設定してください。
-   * （Googleフォームの「事前入力したURLを取得」で entry.○○ の番号を確認できます）
-   */
-  orderForm: {
-    action: 'https://docs.google.com/forms/d/e/1FAIpQLSeOJ-Qex9Waf_NRf3Fkdv1UOpt4zJDzOZ3xuC3ivtRRsWkwxg/formResponse',
-    entries: {
-      name: 'entry.740250653',
-      zip: 'entry.1739339688',
-      address: 'entry.2107088272',
-      tel: 'entry.1142574108',
-      email: 'entry.2125797052',
-      order: 'entry.289276212',
-    },
-  },
   bank: [
     '足利銀行 雀宮（すずめのみや）支店 普通預金 3361867 イシグロ オサム',
     '三井住友銀行 神田支店 普通預金 1967288 イシグロ オサム',

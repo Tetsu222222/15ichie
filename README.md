@@ -13,7 +13,7 @@ https://15ichie.net のソースです。[Astro](https://astro.build) で作っ�
 - 改行はそのまま改行として表示されます。URL は自動でリンクになります
 - **直す・消す**：スプレッドシート「15ichie.netお知らせ更新（回答）」の回答シートで、その行のタイトルや本文を直す／行を削除する
 - 投稿日時はフォームを送った日時になります
-- 仕組み：フォームの回答 →「公開用」シート（タイムスタンプ・タイトル・本文だけを式で表示。合言葉は出さない）→「ウェブに公開」したCSV → サイトの `/api/news`（`worker/index.js`）。CSVのURLは `wrangler.jsonc` の `NEWS_CSV_URL`
+- 仕組み：フォームの回答 →「公開用」シート（タイムスタンプ・タイトル・本文だけを式で表示。合言葉は出さない）→「ウェブに公開」したCSV → サイトの `/api/news`（`worker/news.ts`）。CSVのURLは `wrangler.jsonc` の `NEWS_CSV_URL`
 - 「公開用」シートの公開設定を止めると、フォームからのお知らせはサイトに出なくなります
 
 ### 写真付きなど凝った記事：AI か GitHub で Markdown を書く
@@ -43,19 +43,28 @@ https://15ichie.net のソースです。[Astro](https://astro.build) で作っ�
 | `/news/` | お知らせ一覧・各記事 |
 
 ### ご注文フォームについて
-サイトのフォームから送られた注文は、Googleフォーム「ご注文フォーム」に回答として届きます（スプレッドシートで一覧、メール通知あり）。
-Googleフォームの質問を追加・変更したときは、`src/site.ts` の `orderForm.entries` の番号（entry.○○）も直してください（Googleフォームの「事前入力した URL を取得」で確認できます）。
+サイトのご注文フォーム（`/order/`）の内容は、Worker の `/api/contact`（`worker/contact.ts`）が受け取り、Cloudflare のメール送信（Email Routing の `send_email`）で自分たちのアドレスに届きます。外部サービスは使っていません。
+
+- 送信元：`noreply@15ichie.net`（返信先はお客様が入力したメールアドレス）
+- 送り先：Cloudflare の **Secret `CONTACT_TO`**（カンマ区切りで複数可）。公開リポジトリなので、アドレスはコードや `wrangler.jsonc` に書かない
+  - 変更：Cloudflare ダッシュボード → Workers & Pages → `15ichie` → Settings → Variables and Secrets、または `npx wrangler secret put CONTACT_TO`
+- 送り先は Email Routing の **Destination addresses で「確認済み」** のアドレスだけ（Workers 無料プランの条件）。新しいアドレスを足すときは、先にそこで追加・確認する
+- 入力チェック・同じサイト以外からの送信の拒否・スパム対策の隠し欄（`website`）は Worker 側で行う
 
 ### 旧URLからの転送
-旧 WordPress の `/?page_id=31` や `/?p=1144` は、`worker/index.js` で新しいURLへ 301 転送します。
+旧 WordPress の `/?page_id=31` や `/?p=1144` は、`worker/redirects.ts` で新しいURLへ 301 転送します。
 
 ## 開発
+
+ローカルでご注文フォームを試すときは `.dev.vars.example` を `.dev.vars` にコピーしてください（`wrangler dev` はメールを実際には送らず、内容をコンソールと `.wrangler/tmp/email/` に出します）。
 
 ```bash
 npm install
 npm run dev      # http://localhost:4321
 npm run build    # dist/ に出力
-npx wrangler dev # Cloudflare と同じ環境で確認（旧URL転送も動く）
+npx wrangler dev # Cloudflare と同じ環境で確認（旧URL転送・/api も動く）
+npm run typecheck # Worker（worker/*.ts）の型チェック
+npm run types     # wrangler.jsonc を変えたら型定義を作り直す
 ```
 
 ## Cloudflare への公開と移行手順（初回のみ）

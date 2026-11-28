@@ -6,9 +6,6 @@ import { yen } from '../lib';
 import basket from '../assets/photos/basket.jpg';
 
 const tel = SITE.tel.replaceAll('-', '');
-const f = SITE.orderForm;
-const useGoogleForm = Boolean(f.action);
-const n = (key: keyof typeof f.entries) => (useGoogleForm ? f.entries[key] : key);
 ---
 
 <Base title="ご注文・ご予約" description="お電話・メール・ご来店・注文フォームでご注文を承ります。ギフトはご予約制です。全国発送可。">
@@ -59,48 +56,43 @@ const n = (key: keyof typeof f.entries) => (useGoogleForm ? f.entries[key] : key
           住所・お名前はお間違いのないようにお願いいたします。<br />
           <strong>当園からの返信をもってご注文完了</strong>とさせていただきます。3営業日以上たっても連絡がない場合は、恐れ入りますが再度ご連絡ください。
         </p>
-        {!useGoogleForm && <p class="note">※「送信」を押すと、入力内容が入ったメールが作成されます。そのままメールを送信してください。</p>}
       </div>
 
-      <form
-        class="form reveal"
-        id="order-form"
-        method="post"
-        action={useGoogleForm ? f.action : `mailto:${SITE.email}`}
-        target={useGoogleForm ? 'gform-sink' : undefined}
-        data-mode={useGoogleForm ? 'google' : 'mail'}
-        data-email={SITE.email}
-      >
+      <form class="form reveal" id="order-form" method="post" action="/api/contact" novalidate>
         <label>
           <span>お名前 <em>必須</em></span>
-          <input type="text" name={n('name')} required autocomplete="name" />
+          <input type="text" name="name" required autocomplete="name" />
         </label>
         <div class="row">
           <label>
             <span>郵便番号</span>
-            <input type="text" name={n('zip')} inputmode="numeric" autocomplete="postal-code" placeholder="321-0000" />
+            <input type="text" name="zip" inputmode="numeric" autocomplete="postal-code" placeholder="321-0000" />
           </label>
           <label class="grow">
             <span>電話番号 <em>必須</em></span>
-            <input type="tel" name={n('tel')} required autocomplete="tel" />
+            <input type="tel" name="tel" required autocomplete="tel" />
           </label>
         </div>
         <label>
           <span>ご住所（都道府県から）</span>
-          <input type="text" name={n('address')} autocomplete="street-address" />
+          <input type="text" name="address" autocomplete="street-address" />
         </label>
         <label>
           <span>メールアドレス</span>
-          <input type="email" name={n('email')} autocomplete="email" />
+          <input type="email" name="email" autocomplete="email" />
         </label>
         <label>
           <span>ご注文内容 <em>必須</em></span>
-          <textarea name={n('order')} rows="7" required placeholder={'例）\nデラックス 2パック（1箱）\nお届け希望日：12月20日\nお届け先：（ご注文者と異なる場合）\nのし：お歳暮'}></textarea>
+          <textarea name="order" rows="7" required placeholder={'例）\nデラックス 2パック（1箱）\nお届け希望日：12月20日\nお届け先：（ご注文者と異なる場合）\nのし：お歳暮'}></textarea>
         </label>
+        <!-- スパム対策の隠し欄（人には見えません。入力しないでください） -->
+        <div class="hp" aria-hidden="true">
+          <label>ウェブサイト<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+        </div>
         <button type="submit" class="btn btn--primary">送信する</button>
-        <p class="form__done" hidden>送信しました。当園からの返信をお待ちください。</p>
+        <p class="form__error" role="alert" hidden></p>
+        <p class="form__done" role="status" hidden>送信しました。当園からの返信をお待ちください。</p>
       </form>
-      {useGoogleForm && <iframe name="gform-sink" title="送信用" hidden></iframe>}
 
       <details class="prices reveal">
         <summary>価格一覧（税込）を見る</summary>
@@ -151,34 +143,58 @@ const n = (key: keyof typeof f.entries) => (useGoogleForm ? f.entries[key] : key
 </Base>
 
 <script>
+  // ご注文フォーム：/api/contact（Cloudflare Worker）に送り、結果を画面に表示する
   const form = document.getElementById('order-form') as HTMLFormElement | null;
-  form?.addEventListener('submit', (e) => {
-    if (form.dataset.mode === 'google') {
-      // Googleフォームへ送信（画面はそのまま）
-      setTimeout(() => {
-        form.reset();
-        form.querySelector<HTMLElement>('.form__done')!.hidden = false;
-      }, 300);
+  const errorBox = form?.querySelector<HTMLElement>('.form__error');
+  const doneBox = form?.querySelector<HTMLElement>('.form__done');
+  const button = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+  const TEL = '080-1131-5479';
+
+  const showError = (msg: string) => {
+    if (!errorBox) return;
+    errorBox.textContent = msg;
+    errorBox.hidden = false;
+  };
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!errorBox || !doneBox || !button) return;
+    errorBox.hidden = true;
+    doneBox.hidden = true;
+    form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
+
+    // ブラウザの必須チェック
+    if (!form.checkValidity()) {
+      form.reportValidity();
       return;
     }
-    // メールアプリで送る
-    e.preventDefault();
-    const d = new FormData(form);
-    const v = (k: string) => String(d.get(k) ?? '').trim();
-    const body = [
-      'いちごいちえ ご注文',
-      '',
-      `お名前：${v('name')}`,
-      `郵便番号：${v('zip')}`,
-      `ご住所：${v('address')}`,
-      `電話番号：${v('tel')}`,
-      `メール：${v('email')}`,
-      '',
-      '【ご注文内容】',
-      v('order'),
-    ].join('\n');
-    const subject = `ご注文（${v('name')} 様）`;
-    location.href = `mailto:${form.dataset.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    button.disabled = true;
+    button.textContent = '送信中…';
+    try {
+      const res = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        error?: string;
+        fields?: Record<string, string>;
+      };
+      if (res.ok && data.ok) {
+        form.reset();
+        doneBox.hidden = false;
+        doneBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      const fieldMsgs = Object.entries(data.fields ?? {}).map(([name, msg]) => {
+        form.querySelector(`[name="${name}"]`)?.setAttribute('aria-invalid', 'true');
+        return msg;
+      });
+      showError([data.error ?? '送信できませんでした。', ...fieldMsgs].join('\n'));
+    } catch {
+      showError(`送信できませんでした。通信環境をご確認のうえ再度お試しいただくか、お電話（${TEL}）でご連絡ください。`);
+    } finally {
+      button.disabled = false;
+      button.textContent = '送信する';
+    }
   });
 </script>
 
@@ -289,6 +305,35 @@ const n = (key: keyof typeof f.entries) => (useGoogleForm ? f.entries[key] : key
     justify-self: center;
     min-width: 240px;
     font-size: 1.05rem;
+  }
+  .form__error {
+    white-space: pre-line;
+    background: var(--berry-50);
+    border: 1px solid var(--berry-200);
+    color: var(--berry-700);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    margin: 0;
+    font-weight: 700;
+  }
+  .form [aria-invalid='true'] {
+    border-color: var(--berry-500);
+  }
+  .form .btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+    transform: none;
+  }
+  /* スパム対策の隠し欄：画面外に出して見えなくする */
+  .hp {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .form {
+    position: relative;
   }
   .form__done {
     text-align: center;
